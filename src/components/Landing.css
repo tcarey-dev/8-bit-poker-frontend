@@ -1,10 +1,24 @@
 
 
-  #imageContainer {
+  #imageContainer{
     height: 120vh;
     background-image: url("https://preview.redd.it/new-kirby-copy-ability-i-made-card-kirby-v0-jobdbb5ucxv81.png?width=584&format=png&auto=webp&s=ab160467e0a28dd29637217d68e523921a42d6a3");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
   }
+  header{
+    text-align: center;
+    animation: blinker 1s linear infinite;
 
+    
+  }
+  #buttonContainer{
+    text-align: center;
+  }
+
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
