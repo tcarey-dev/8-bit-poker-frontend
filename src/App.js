@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import Landing from "./components/Landing";
 import NotFound from "./components/NotFound";
+import Lobby from "./components/Lobby";
 
 function App() {
   return (
@@ -9,7 +10,8 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Landing/>}/>
-        <Route path='*' element={<NotFound/>}/>
+	      <Route path='/lobby' element={<Lobby/>}/>
+	      <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>
   </>
