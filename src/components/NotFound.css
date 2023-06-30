@@ -15,10 +15,10 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 50%;
-    animation: blinker 3s linear infinite;
+    animation: blinker2 3s linear infinite;
 }
 
-@keyframes blinker {
+@keyframes blinker2{
     50% {
       opacity: 0;
     }
