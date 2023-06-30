@@ -1,0 +1,20 @@
+#listContainer table{
+    text-align: center;
+    width:99%
+}
+
+#listBorder{
+    padding-top: 20;
+    padding-left: 65;
+    padding-right: 65;
+    padding-bottom: 50;
+    margin-top: 90;
+    margin-bottom: 75;
+    margin-left: 100;
+    margin-right: 100;
+}
+
+.title{
+    padding: 30;
+    text-align: center;
+}
