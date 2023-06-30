@@ -1,0 +1,18 @@
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+nav a{
+    background-color: #fff;
+}
+#nesController{
+    top: 40;
+    margin-left: 2%;
+}
+#nesController2{
+    top: 0;
+    margin-left: 93%;
+
+}
