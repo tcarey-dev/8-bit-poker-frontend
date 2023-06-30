@@ -20,10 +20,10 @@ return(<>
         <button className="nes-btn is-primary" >
             <i 
             // onClick={() => navigate()}
-            ></i>Login
+            ></i>Log In
         </button>
         <button className="nes-btn is-primary" >
-            <i></i>Sign-Up
+            <i></i>Sign Up
         </button>
     </section>
 </>)

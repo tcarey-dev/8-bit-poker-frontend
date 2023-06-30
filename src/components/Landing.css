@@ -9,7 +9,7 @@
   }
   header{
     text-align: center;
-    animation: blinker 1s linear infinite;
+    animation: blinker 2s linear infinite;
 
     
   }
@@ -20,5 +20,6 @@
   @keyframes blinker {
     50% {
       opacity: 0;
+      color: yellow;
     }
   }
