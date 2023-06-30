@@ -1,0 +1,25 @@
+#notFound{
+    background-color: black;
+    height: 100%;
+    
+}
+
+#noPrincess{
+    text-align: center;
+    color: azure;
+    
+}
+#imageContainerTwo{
+    background-image: url('https://www.hdwallpapers.in/download/yellow_red_game_over_black_background_hd_game_over-HD.jpg');
+    height: 50vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    animation: blinker2 3s linear infinite;
+}
+
+@keyframes blinker2{
+    50% {
+      opacity: 0;
+    }
+  }
