@@ -23,30 +23,35 @@ function Lobby(){
 
     return(
         <>
-        <main className="container">
-            <section id="listContainer" className="listContainer">
-                <h2>Rooms</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Stake</th>
-                            <th>Seats</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rooms.map(room => (
-                            <tr key={room.roomId}>
-                                <td>{room.roomId}</td>
-                                <td>{room.stake}</td>
-                                <td>{room.seats}</td>
+        <div id="listBorder" className="nes-container is-centered is-rounded">
+            <h2 class="title">Rooms</h2>
+                <div id="listContainer" className="nes-table-responsive">
+                    <table className="nes-table is-bordered is-centered is-dark">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Stake</th>
+                                <th>Seats</th>
+                                <th>&nbsp;</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </section>
-        </main>
+                        </thead>
+                        <tbody>
+                            {rooms.map(room => (
+                                <tr key={room.roomId}>
+                                    <td>{room.roomId}</td>
+                                    <td>{room.stake}</td>
+                                    <td>{room.seats}</td>
+                                    <td>
+                                        <Link className="nes-btn is-success" type="button" to={"/room"}>
+                                            JOIN <i className="nes-icon coin is-small"/>
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </>
     )
 
