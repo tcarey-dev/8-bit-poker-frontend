@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import Greetings from "./TestWebsockets";
-
-function App() {
-  return (
-  <><Greetings />
-=======
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import Landing from "./components/Landing";
@@ -25,7 +18,6 @@ function App() {
 	      <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>
->>>>>>> development
   </>
   );
 }
