@@ -9,13 +9,19 @@
     color: azure;
     
 }
+.goBackButton{
+    position:absolute;
+    width:100%;
+    bottom:75;
+    text-align:center;
+}
 #imageContainerTwo{
     background-image: url('https://www.hdwallpapers.in/download/yellow_red_game_over_black_background_hd_game_over-HD.jpg');
     height: 50vh;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 50%;
-    animation: blinker2 3s linear infinite;
+    animation: blinker2 3.5s linear infinite;
 }
 
 @keyframes blinker2{
