@@ -1,5 +1,6 @@
 import "nes.css/css/nes.min.css";
 import './NotFound.css'
+import { Link } from "react-router-dom";
 
 function NotFound() {
     return(<div id="notFound">
@@ -12,7 +13,9 @@ function NotFound() {
             </section>
         </div>
         <div className="goBackButton">
-            <button className="nes-btn is-warning">Go Back</button>
+            <Link className="nes-btn is-warning" type="button" to={"/"}>
+                Go Back 
+            </Link>
         </div>
     </div>)
 }

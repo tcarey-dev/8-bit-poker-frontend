@@ -16,7 +16,7 @@ return(<>
         </div>
         <section id="buttonContainer">
             <h2 className="optionText">Select Option Below</h2>
-                <button typ="button" className="nes-btn is-primary">
+                <button className="nes-btn is-primary">
                     <i></i>Log In
                 </button>
                 <button className="nes-btn is-primary">
