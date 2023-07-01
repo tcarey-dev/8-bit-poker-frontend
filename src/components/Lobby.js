@@ -54,7 +54,11 @@ function Lobby(){
                                 <th>Id</th>
                                 <th>Stake</th>
                                 <th>Seats</th>
-                                <th>&nbsp;</th>
+                                <th>
+                                    <button className="nes-btn is-primary" onClick={() => navigate('/room/create')}>
+                                    CREATE
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
