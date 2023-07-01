@@ -1,0 +1,54 @@
+/* *{
+    border: 2px solid rebeccapurple;
+} */
+
+#roomFormBorder{
+    padding-left: 65;
+    padding-right: 65;
+    padding-bottom: 50;
+    margin-top: 90;
+    margin-bottom: 75;
+    margin-left: 100;
+    margin-right: 100;
+    max-width: 1000;
+}
+
+
+
+#buttonYes{
+    margin-top: 30;
+    margin-right: 25;
+    margin-bottom: 50; 
+}
+
+#buttonNo{
+    margin-top: 30;
+    margin-right: 25;
+    margin-left: 25;
+    margin-bottom: 50; 
+}
+
+#selectFieldSeats{
+    min-height: auto;
+    margin-top: 25;
+    max-width: 500;
+}
+
+#stakeTitle{
+    margin-bottom: 11;
+}
+
+#seats{
+    /* This is what's making the arrow for the dropdown centered in the box */
+    margin-bottom: 35;
+}
+
+#inputStake{
+    margin-top: 25;
+}
+
+#buttons{
+    max-height: 50;
+    position: absolute;
+    bottom: 35;
+}
