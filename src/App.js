@@ -11,7 +11,7 @@ function App() {
   <>
     <Router>
       <Routes>
-        <Route path='/' element={<LoginForm/>}/>
+        <Route path='/' element={<Landing/>}/>
         <Route path='/room/create' element={<RoomForm/>}/>
         <Route path='/room/update/:id' element={<RoomForm/>}/>
 	      <Route path='/lobby' element={<Lobby/>}/>
