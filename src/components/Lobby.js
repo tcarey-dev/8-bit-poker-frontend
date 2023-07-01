@@ -46,7 +46,7 @@ function Lobby(){
     return(
         <>
         <div id="listBorder" className="nes-container is-centered is-rounded">
-            <h2 class="title">Rooms</h2>
+            <h2 className="title">Rooms</h2>
                 <div id="listContainer" className="nes-table-responsive">
                     <table className="nes-table is-bordered is-centered is-dark">
                         <thead>
@@ -67,7 +67,7 @@ function Lobby(){
                                         <Link className="nes-btn is-success" type="button" to={"/room"}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
-                                        <Link className="nes-btn is-warning" to={`/room/edit/${room.id}`}>
+                                        <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
                                             UPDATE
                                         </Link>
                                         <button className="nes-btn is-error" onClick={() => handleDeleteRoom(room.roomId)}>

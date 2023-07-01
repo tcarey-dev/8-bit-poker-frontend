@@ -18,7 +18,7 @@ function RoomForm(){
 
     useEffect(() => {
         if(id) {
-            fetch('${url}/${id}')
+            fetch(`${url}/${id}`)
             .then(response => {
                 if(response.status === 200){
                     return response.json();
@@ -101,10 +101,10 @@ function RoomForm(){
                 if(!data){
                     navigate('/lobby')
                 }else{
-                    setErrors(data);
+                    setErrors(data.error);
                 }
             })
-            .catch(err => setErrors(err));
+            .catch(err => setErrors(err.error));
     }
 
     return(
@@ -112,7 +112,7 @@ function RoomForm(){
         <div id="roomFormBorder" className="nes-container with-title is-rounded">
             <p id="roomFormHeading"className="title">{id > 0 ? 'Update Room' : 'Create a Room'}</p>
             <Errors errors={errors}/>
-            <form onSubmit={handlesubmit}>
+            <form onSubmit={handlesubmit} id="form">
                 <div className="form-row">
                     <fieldset id="inputStake" className="nes-field">
                         <label id="stakeTitle" htmlFor="stake">Stakes</label>
@@ -145,7 +145,7 @@ function RoomForm(){
                         </select>
                     </fieldset>
                     <div id="buttons">
-                        <button id="buttonYes" className="nes-btn is-primary" type="Submit">{id > 0 ? 'Update' : 'Create'}</button>
+                        <button id="buttonYes" className="nes-btn is-primary" type="submit">{id > 0 ? 'Update' : 'Create'}</button>
                         <Link id="buttonNo" className="nes-btn is-error" type="button" to={'/lobby'}>Cancel</Link>
                     </div>
                 </div>
