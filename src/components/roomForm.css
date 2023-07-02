@@ -1,5 +1,5 @@
 /* *{
-    border: 2px solid rebeccapurple;
+    background-color: #212529;
 } */
 
 #roomFormBorder{
@@ -29,7 +29,7 @@
 }
 
 #selectFieldSeats{
-    min-height: auto;
+    margin-left: -.5;
     margin-top: 25;
     max-width: 500;
 }
@@ -45,6 +45,7 @@
 
 #inputStake{
     margin-top: 25;
+    margin-right: 20;
 }
 
 #buttons{

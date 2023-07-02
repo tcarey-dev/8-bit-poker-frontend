@@ -6,6 +6,8 @@ import Lobby from "./components/Lobby";
 import LoginForm from "./components/Login";
 import RoomForm from "./components/RoomForm";
 import SignUpForm from "./components/SignUpForm";
+import Room from "./components/Room";
+import Card from "./components/Card";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path='/room/create' element={<RoomForm/>}/>
         <Route path='/room/update/:id' element={<RoomForm/>}/>
 	      <Route path='/lobby' element={<Lobby/>}/>
+        <Route path='/room/:id' element={<Room />}/>
+        <Route path='/card' element={<Card />}/>
 	      <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>

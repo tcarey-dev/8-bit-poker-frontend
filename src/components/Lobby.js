@@ -54,7 +54,11 @@ function Lobby(){
                                 <th>Id</th>
                                 <th>Stake</th>
                                 <th>Seats</th>
-                                <th>&nbsp;</th>
+                                <th>
+                                    <button className="nes-btn is-primary" onClick={() => navigate('/room/create')}>
+                                    CREATE
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,7 +68,7 @@ function Lobby(){
                                     <td>{room.stake}</td>
                                     <td>{room.seats}</td>
                                     <td>
-                                        <Link className="nes-btn is-success" type="button" to={"/room"}>
+                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
