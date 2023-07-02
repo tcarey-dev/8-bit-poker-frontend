@@ -2,6 +2,7 @@ import React from "react";
 // import { useNavigate } from 'react-router-dom';
 import './Landing.css';
 import "nes.css/css/nes.min.css";
+import { Link } from "react-router-dom";
 
 function Landing(){
 
@@ -16,35 +17,14 @@ return(<>
         </div>
         <section id="buttonContainer">
             <h2 className="optionText">Select Option Below</h2>
-                <button className="nes-btn is-primary">
+                <button id="logInButton"className="nes-btn is-primary">
                     <i></i>Log In
                 </button>
-                <button className="nes-btn is-primary">
+                <Link id="signUpButton"className="nes-btn is-primary" type="button" to={"/signup"}>
                     <i></i>Sign Up
-                </button>
+                </Link>
         </section>
 </>)
 }
 
 export default Landing;
-
-// return(<>
-//     <section id="imageContainer">
-//         <div>
-//             <header>
-//                 <h1>Welcome to<br/>8-Bit Poker Showdown!</h1>
-//             </header>
-//         </div>
-//     </section>
-//     <section id="buttonContainer">
-//         <h2>Select Option Below</h2>
-//         <button className="nes-btn is-primary" >
-//             <i 
-//             // onClick={() => navigate()}
-//             ></i>Log In
-//         </button>
-//         <button className="nes-btn is-primary" >
-//             <i></i>Sign Up
-//         </button>
-//     </section>
-// </>)
