@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function NotFound() {
     return(<div id="notFound">
-         <div className="container">
+        <div className="container">
             <div>
                 <p id="noPrincess">Sorry...The Princess Is In Another Castle...</p>
             </div>
