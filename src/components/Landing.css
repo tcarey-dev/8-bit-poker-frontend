@@ -25,3 +25,10 @@ header{
   margin-left: auto;
   margin-right: auto;
 }
+#signUpButton{
+  margin-right: 25;
+}
+#logInButton{
+  margin-right: 25;
+  margin-left: 25;
+}

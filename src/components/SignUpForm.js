@@ -17,15 +17,15 @@ function SignUpForm() {
     const [player, setPlayer] = useState(EMPTY_PLAYER);
     const [errors, setErrors] = useState([]);
 
-    const url = 'http://localhost:8080/api/player'
+    const url = 'http://localhost:8080/api/player/create-account'
 
     const navigate = useNavigate();
 
-    const { playerId } = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
-        if (playerId) {
-            fetch(`${url}/${playerId}`)
+        if (id) {
+            fetch(`${url}/${id}`)
             .then(response => {
                 if(response.status === 200) {
                     return response.json();
@@ -38,7 +38,7 @@ function SignUpForm() {
             })
             .catch(console.log);
         }
-    }, [playerId]);
+    }, [id]);
 
     const handleChange = (event) => {
         const newPlayer = { ...player };
@@ -99,8 +99,9 @@ function SignUpForm() {
             )}
             <form onSubmit={handleSubmit} id="signUpForm">
                 <fieldset className="form-group">
-                    <label htmlFor="username" className="nes-textarea">Username:</label>
-                    <input type="text"
+                    <label htmlFor="username" className="nes-textarea">Username</label>
+                    <input placeholder="example@example.com"
+                        type="text"
                         className="nes-textarea" 
                         id="username" 
                         name="username"
@@ -108,8 +109,9 @@ function SignUpForm() {
                         onChange={handleChange}/>
                 </fieldset>
                 <fieldset className="form-group">
-                    <label htmlFor="password" className="nex-textarea">Password:</label>
-                    <input type="text" 
+                    <label htmlFor="password" className="nex-textarea">Password</label>
+                    <input placeholder="8 Character Min. Must Contain: Digit, Letter, Special Character"
+                        type="text" 
                         className="nes-textarea"
                         id="password"
                         name="password"
@@ -117,8 +119,9 @@ function SignUpForm() {
                         onChange={handleChange}/>
                 </fieldset>
                 <fieldset className="form-group">
-                    <label htmlFor="displayName" className="nes-textarea" >Display Name:</label>
-                    <input type="text"
+                    <label htmlFor="displayName" className="nes-textarea" >Display Name</label>
+                    <input placeholder="50 Character Max."
+                        type="text"
                         className="nes-textarea"
                         id="displayName"
                         name="displayName"
@@ -126,7 +129,7 @@ function SignUpForm() {
                         onChange={handleChange}/>
                 </fieldset>
                 <fieldset className="form-group">
-                    <label htmlFor="accountBalance">Account Balance:</label>
+                    <label htmlFor="accountBalance">Account Balance</label>
                     <input type="text"
                         className="nes-textarea"
                         id="accountBalance"

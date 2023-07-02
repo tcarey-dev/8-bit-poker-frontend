@@ -17,10 +17,10 @@ return(<>
         </div>
         <section id="buttonContainer">
             <h2 className="optionText">Select Option Below</h2>
-                <button className="nes-btn is-primary">
+                <button id="logInButton"className="nes-btn is-primary">
                     <i></i>Log In
                 </button>
-                <Link className="nes-btn is-primary" type="button" to={"/signup"}>
+                <Link id="signUpButton"className="nes-btn is-primary" type="button" to={"/signup"}>
                     <i></i>Sign Up
                 </Link>
         </section>
