@@ -64,7 +64,7 @@ function Lobby(){
                                     <td>{room.stake}</td>
                                     <td>{room.seats}</td>
                                     <td>
-                                        <Link className="nes-btn is-success" type="button" to={"/room"}>
+                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>

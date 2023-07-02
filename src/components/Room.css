@@ -1,0 +1,127 @@
+#room {
+    margin-left: 5rem;
+    margin-right: 5rem;
+}
+#game-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr .75fr 1fr .75fr 1fr;
+    height: 75vh;
+    max-width: 1200px;
+}
+
+#item1{
+    /* background-color: #87CEEB; */
+}
+#item2{
+    /* background-color: #FF7F50; */
+}
+#item3{
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    /* background-color: #4682B4; */
+}
+#item4{
+    /* background-color: #FFA07A; */
+}
+#item5{
+    /* background-color: #6495ED; */
+}
+#item6{
+    /* background-color: #FF8C00; */
+}
+#item7{
+    /* background-color: #191970; */
+}
+#item8{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    /* background-color: #FFA500; */
+}
+#item9{
+    /* background-color: #87CEEB; */
+}
+#item10{
+    /* background-color: #FF7F50; */
+}
+#pot{
+    /* background-color: #4682B4; */
+}
+#item12{
+    grid-column-start: 2;
+    grid-column-end: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-content: center;
+}
+#item13{
+    /* background-color: #6495ED; */
+}
+#item14{
+    /* background-color: #FF8C00; */
+}
+#item15{
+    /* background-color: #191970; */
+}
+#game-info{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    justify-content: left;
+    justify-items: left;
+    align-items: left;
+    align-content: left;
+    /* background-color: #FFA500; */
+}
+#item17{
+    /* background-color: #191970; */
+}
+#item18{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    /* background-color: #87CEEB; */
+}
+#item19{
+    /* background-color: #FF7F50; */
+}
+#item20{
+    grid-column-start: 5;
+    grid-column-end: 6;
+    grid-row-start: 4;
+    grid-row-end: 6;
+    /* background-color: #4682B4; */
+}
+#item21{
+    /* background-color: #FFA07A; */
+}
+#item22{
+    /* background-color: #6495ED; */
+}
+#item23{
+    /* background-color: #FF8C00; */
+}
+#item24{
+    display: grid;
+    grid-template-rows: 3fr 1fr;
+    /* background-color: #191970; */
+}
+.icon-stack{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
+}
+
+#item25{
+    /* background-color: #FFA500; */
+}
+
+#player-option-btns {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding: 10px;
+    row-gap: 10px;
+    justify-content: center;
+    align-content: center;
+
+} 
