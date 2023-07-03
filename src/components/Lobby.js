@@ -1,17 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./lobby.css";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
+import AuthContext from '../contexts/AuthContext';
 
 function Lobby(){
     const [rooms, setRooms] = useState([]);
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
     const url = "http://localhost:8080/api/room";
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
-        fetch(url)
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        }}
+
+        fetch(url, init)
         .then(response => {
             if(response.status === 200) {
                 return response.json();

@@ -38,7 +38,7 @@ const INITIALIZED_GAME =
     "stake": 2,
     "seats": 2,
     "game": {
-        "gameId": 1,
+        "gameId": 100,
         "pot": 0,
         "winner": null,
         "lastAction": null,
@@ -91,12 +91,16 @@ function Room(){
     const [holeCards, setHoleCards] = useState([]);
 
     const connect = useCallback(() => {
-        const socket = new SockJS(url);
-        stompClient = Stomp.over(socket);
+        stompClient = Stomp.over(() => {
+            return new SockJS(url);
+        });
         stompClient.connect({}, () => {
             stompClient.subscribe('/topic/game', (message) => {
                 const room = JSON.parse(message.body);
                 setRoom(room);
+            });
+            stompClient.subscribe('/topic/errors', (error) => {
+                console.log(error.body);
             });
             // stompClient.send("/app/init", {}, JSON.stringify(DEFAULT_ROOM));
         })
@@ -167,8 +171,8 @@ function Room(){
                 <div id="item3">
                     <div>displayName</div>
                     <div className="icon-stack">
-                            <div><i class="nes-mario"></i></div>
-                            <div>500<i class="nes-icon coin is-med"></i></div>
+                            <div><i className="nes-mario"></i></div>
+                            <div>500<i className="nes-icon coin is-med"></i></div>
                     </div>
                 </div>
                 <div id="item4"></div>
@@ -212,10 +216,10 @@ function Room(){
                 {/* <div id="item17">17</div> */}
                 <div id="item18">
                     <div id="hero-card1">
-                        {<Card value={`${holeCards[0]}`} />}
+                        {<Card value={holeCards[0] ? `${holeCards[0]}` : 'EMPTY'} />}
                     </div>
                     <div id="hero-card2">
-                        {<Card value={`${holeCards[1]}`} />}
+                        {<Card value={holeCards[1] ? `${holeCards[1]}` : 'EMPTY'} />}
                     </div>
                 </div>
                 <div id="item19"></div>
@@ -245,8 +249,8 @@ function Room(){
                 <div id="item23"></div>
                 <div id="item24">
                     <div className="icon-stack">
-                        <div><i class="nes-ash"></i></div>
-                        <div>500<i class="nes-icon coin is-med"></i></div>
+                        <div><i className="nes-ash"></i></div>
+                        <div>500<i className="nes-icon coin is-med"></i></div>
                     </div>
                     <div>displayName</div>
                 </div>
