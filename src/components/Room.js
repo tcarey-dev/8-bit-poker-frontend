@@ -7,73 +7,6 @@ import Card from "./Card";
 import AuthContext from "../contexts/AuthContext";
 
 var stompClient = null;
-const PLAYER_ONE = {
-    "playerId": 3,
-    "username": "fred@astair.com",
-    "displayName": null,
-    "enabled": true,
-    "accountBalance": 25,
-    "authorities": [
-        "USER"
-    ],
-    "holeCards": null,
-    "position": null,
-    "playersAction": false
-}
-const PLAYER_TWO = {
-    "playerId": 6,
-    "username": "lisa@simpson.com",
-    "displayName": null,
-    "enabled": true,
-    "accountBalance": 225,
-    "authorities": [
-        "USER"
-    ],
-    "holeCards": null,
-    "position": null,
-    "playersAction": false
-}
-const INITIALIZED_GAME = 
-{
-    "roomId": 3,
-    "stake": 2,
-    "seats": 2,
-    "game": {
-        "gameId": 100,
-        "pot": 0,
-        "winner": null,
-        "lastAction": null,
-        "board": null,
-        "players": [
-        {
-            "playerId": 3,
-            "username": "fred@astair.com",
-            "displayName": null,
-            "enabled": true,
-            "accountBalance": 25,
-            "authorities": [
-            "USER"
-            ],
-            "holeCards": null,
-            "position": null,
-            "playersAction": false
-        },
-        {
-            "playerId": 6,
-            "username": "lisa@simpson.com",
-            "displayName": null,
-            "enabled": true,
-            "accountBalance": 225,
-            "authorities": [
-            "USER"
-            ],
-            "holeCards": null,
-            "position": null,
-            "playersAction": false
-        }
-        ]
-    }
-}
 
 function Room(){
     const auth = useContext(AuthContext);
@@ -94,7 +27,7 @@ function Room(){
     const [villain, setVillain] = useState(null);
     const [hero, setHero] = useState(null);
     const [room, setRoom] = useState(DEFAULT_ROOM);
-    const [holeCards, setHoleCards] = useState([]);
+    // const [holeCards, setHoleCards] = useState([]);
 
     const connect = useCallback((data, hero) => {
         stompClient = Stomp.over(() => {
@@ -110,10 +43,15 @@ function Room(){
             });
 
             if (!data.game) {
-                stompClient.send("/app/init", {}, JSON.stringify(DEFAULT_ROOM));
-                data.game.players = [...data.game.players, hero];
-                stompClient.send("/app/add-players", {}, JSON.stringify(data));
+                stompClient.send("/app/init", {}, JSON.stringify(data));
+                const NEW_ROOM = {...data};
+                NEW_ROOM.game = { players: [hero] }
+                stompClient.send("/app/add-players", {}, JSON.stringify(NEW_ROOM));
             } else {
+                // if (!data.game.players) {
+                //     data.game.players = [hero];
+                //     stompClient.send("/app/add-players", {}, JSON.stringify(data));
+                // }
                 data.game.players = [...data.game.players, hero]
                 stompClient.send("/app/add-players", {}, JSON.stringify(data));
             }
@@ -143,6 +81,7 @@ function Room(){
         })
         .then(data => {
             setHero(data);
+            console.log('Hero was set');
         })
         .catch(console.log);
     }, [auth.user.username]);
@@ -170,7 +109,8 @@ function Room(){
                 }
             })
             .then(data => {
-                if (data.game) {
+                if (data) {
+                    console.log("Submitting game and hero to connect()");
                     connect(data, hero);
                 }
             })
@@ -179,14 +119,14 @@ function Room(){
     }, [hero, id, connect])
 
     // triggerred on room state change
-    useEffect(() => {
-        if(room.game != null 
-            && room.game.players[0] != null
-            && room.game.players[0].holeCards != null){
-            let cards = room.game.players[0].holeCards;
-            setHoleCards(cards);
-        }
-    }, [room]);
+    // useEffect(() => {
+    //     if(hero !== null
+    //         && room.game !== null 
+    //         && room.game.players !== null
+    //         && room.game.players.length === 2){
+    //         setVillain(room.game.players.filter(player => player.username !== hero.username));
+    //     }
+    // }, [room, hero]);
 
     const disconnect = () => {
         if (stompClient !== null) {
@@ -197,7 +137,7 @@ function Room(){
     }
 
     const startGame = () => {
-        stompClient.send("/app/start-game", {}, JSON.stringify(INITIALIZED_GAME));
+        stompClient.send("/app/start-game", {}, JSON.stringify(room));
     }
 
     const handleSubmit = (event) => {
@@ -283,10 +223,14 @@ function Room(){
                 {/* <div id="item17">17</div> */}
                 <div id="item18">
                     <div id="hero-card1">
-                        {<Card value={holeCards[0] ? `${holeCards[0]}` : 'EMPTY'} />}
+                        {<Card value={
+                            // hero && hero.holeCards ? `${hero.holeCards[0]}` : 
+                            'EMPTY'} />}
                     </div>
                     <div id="hero-card2">
-                        {<Card value={holeCards[1] ? `${holeCards[1]}` : 'EMPTY'} />}
+                        {<Card value={
+                            // hero && hero.holeCards ? `${hero.holeCards[1]}` : 
+                            'EMPTY'} />}
                     </div>
                 </div>
                 <div id="item19"></div>
