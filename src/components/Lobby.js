@@ -76,7 +76,7 @@ function Lobby(){
                                     <td>{room.stake}</td>
                                     <td>{room.seats}</td>
                                     <td>
-                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`}>
+                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`} state={{ stake: room.stake, seats: room.seats, playersCount: room.playersCount }}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
