@@ -94,9 +94,13 @@ function Room(){
     const [villain, setVillain] = useState(null);
     const [hero, setHero] = useState(null);
     const [room, setRoom] = useState(DEFAULT_ROOM);
-    const [holeCards, setHoleCards] = useState([]);
+    const [step1, setStep1] = useState(false);
+    const [step2, setStep2] = useState(false);
+    const [step3, setStep3] = useState(false);
 
-    const connect = useCallback((data, hero) => {
+    // const [holeCards, setHoleCards] = useState([]);
+
+    const connect = useCallback((room) => {
         stompClient = Stomp.over(() => {
             return new SockJS(ws_url);
         });
@@ -109,17 +113,23 @@ function Room(){
                 console.log(error.body);
             });
 
-            if (!data.game) {
-                stompClient.send("/app/init", {}, JSON.stringify(DEFAULT_ROOM));
-                data.game.players = [...data.game.players, hero];
-                stompClient.send("/app/add-players", {}, JSON.stringify(data));
+            if (!step3) {
+                stompClient.send("/app/init", {}, JSON.stringify(room));
+                setStep3(true);
             } else {
-                data.game.players = [...data.game.players, hero]
-                stompClient.send("/app/add-players", {}, JSON.stringify(data));
+                if (room.game.players === null) {
+                    room.game.players = [hero];
+                    stompClient.send("/app/add-players", {}, JSON.stringify(room));
+                } else {
+                    if (!room.game.players.some(p => p === hero)){
+                        room.game.players = [...room.game.players, hero];
+                        stompClient.send("/app/add-players", {}, JSON.stringify(room));
+                    }
+                }
             }
         });
 
-    }, [DEFAULT_ROOM]);
+    }, [step3, hero]);
 
     //triggered on page load
     useEffect(() => {
@@ -143,6 +153,7 @@ function Room(){
         })
         .then(data => {
             setHero(data);
+            setStep1(true);
         })
         .catch(console.log);
     }, [auth.user.username]);
@@ -170,23 +181,29 @@ function Room(){
                 }
             })
             .then(data => {
-                if (data.game) {
-                    connect(data, hero);
+                if (data) {
+                    setRoom(data);
+                    setStep2(true);
                 }
             })
             .catch(console.log);
         }
-    }, [hero, id, connect])
+    }, [step1, hero, id])
+
+
+    useEffect(() => {
+        connect(room);
+    }, [step2, connect, room])
 
     // triggerred on room state change
-    useEffect(() => {
-        if(room.game != null 
-            && room.game.players[0] != null
-            && room.game.players[0].holeCards != null){
-            let cards = room.game.players[0].holeCards;
-            setHoleCards(cards);
-        }
-    }, [room]);
+    // useEffect(() => {
+    //     if(room.game != null 
+    //         && room.game.players[0] != null
+    //         && room.game.players[0].holeCards != null){
+    //         let cards = room.game.players[0].holeCards;
+    //         setHoleCards(cards);
+    //     }
+    // }, [room]);
 
     const disconnect = () => {
         if (stompClient !== null) {
@@ -283,10 +300,10 @@ function Room(){
                 {/* <div id="item17">17</div> */}
                 <div id="item18">
                     <div id="hero-card1">
-                        {<Card value={holeCards[0] ? `${holeCards[0]}` : 'EMPTY'} />}
+                        {/* {<Card value={holeCards[0] ? `${holeCards[0]}` : 'EMPTY'} />} */}
                     </div>
                     <div id="hero-card2">
-                        {<Card value={holeCards[1] ? `${holeCards[1]}` : 'EMPTY'} />}
+                        {/* {<Card value={holeCards[1] ? `${holeCards[1]}` : 'EMPTY'} />} */}
                     </div>
                 </div>
                 <div id="item19"></div>
