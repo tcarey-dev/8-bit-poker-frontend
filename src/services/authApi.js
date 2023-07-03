@@ -58,7 +58,7 @@ const makeUserFromJwt = (jwtToken) => {
     const userData = tokenParts[1];
     const decodedUserData = JSON.parse(atob(userData));
     return {
-      appUserId: decodedUserData.app_user_id,
+      playerId: decodedUserData.player_id,
       username: decodedUserData.sub,
       authorities: decodedUserData.authorities.split(',')
     }

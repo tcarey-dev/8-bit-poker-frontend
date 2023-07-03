@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useMemo, useContext } from "react";
 import { Stomp } from '@stomp/stompjs';
 import SockJS from "sockjs-client";
 import { useNavigate, useParams } from "react-router";
 import './Room.css';
 import Card from "./Card";
+import AuthContext from "../contexts/AuthContext";
 
 var stompClient = null;
 const PLAYER_ONE = {
@@ -75,8 +76,10 @@ const INITIALIZED_GAME =
 }
 
 function Room(){
-
-    const url = 'http://localhost:8080/ws';
+    const auth = useContext(AuthContext);
+    const ws_url = 'http://localhost:8080/ws';
+    const player_url = 'http://localhost:8080/api/player';
+    const room_url = 'http://localhost:8080/api/room';
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -86,13 +89,16 @@ function Room(){
         "seats": 2,
         "game": null
     }), [id]); 
+    
 
+    const [villain, setVillain] = useState(null);
+    const [hero, setHero] = useState(null);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [holeCards, setHoleCards] = useState([]);
 
-    const connect = useCallback(() => {
+    const connect = useCallback((data, hero) => {
         stompClient = Stomp.over(() => {
-            return new SockJS(url);
+            return new SockJS(ws_url);
         });
         stompClient.connect({}, () => {
             stompClient.subscribe('/topic/game', (message) => {
@@ -102,14 +108,75 @@ function Room(){
             stompClient.subscribe('/topic/errors', (error) => {
                 console.log(error.body);
             });
-            // stompClient.send("/app/init", {}, JSON.stringify(DEFAULT_ROOM));
-        })
-    }, []);
+
+            if (!data.game) {
+                stompClient.send("/app/init", {}, JSON.stringify(DEFAULT_ROOM));
+                data.game.players = [...data.game.players, hero];
+                stompClient.send("/app/add-players", {}, JSON.stringify(data));
+            } else {
+                data.game.players = [...data.game.players, hero]
+                stompClient.send("/app/add-players", {}, JSON.stringify(data));
+            }
+        });
+
+    }, [DEFAULT_ROOM]);
 
     //triggered on page load
     useEffect(() => {
-        connect(); 
-    }, [id, connect]);
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }}
+        
+        fetch(`${player_url}/${auth.user.username}`, init)
+        .then(response => {
+            if(response.status === 200) {
+                return response.json();
+            }else{
+                return Promise.reject(`Unexpected Status Code: ${response.status}`);
+            }
+        })
+        .then(data => {
+            setHero(data);
+        })
+        .catch(console.log);
+    }, [auth.user.username]);
+
+
+    // triggered when hero is set
+    useEffect(() => { 
+        if(hero) {
+            const jwtToken = localStorage.getItem('jwt_token');
+
+            const init = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }}
+
+            fetch(`${room_url}/${id}`, init)
+            .then(response => {
+                if(response.status === 200) {
+                    return response.json();
+                }else{
+                    return Promise.reject(`Unexpected Status Code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (data.game) {
+                    connect(data, hero);
+                }
+            })
+            .catch(console.log);
+        }
+    }, [hero, id, connect])
 
     // triggerred on room state change
     useEffect(() => {

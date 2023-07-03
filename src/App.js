@@ -14,12 +14,7 @@ import AuthContext from "./contexts/AuthContext";
 const EMPTY_USER = {
   playerId: null,
   username: '',
-  displayName: null,
-  authorities: [],
-  enabled: true,
-  accountBalance: 0,
-
-
+  authorities: []
 };
 const WAIT_TIME = 1000 * 60 * 14;
 
