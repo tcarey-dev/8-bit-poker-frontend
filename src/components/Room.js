@@ -18,6 +18,7 @@ function Room({ stake, seats, playerCount }){
 
     const [connected, setConnected] = useState(false);
     const [timeToGetRoom, setTimeToGetRoom] = useState(false);
+    const [initialized, setInitialized] = useState(false);
 
     const hero = useRef(null);
     const room = useRef({
@@ -32,15 +33,18 @@ function Room({ stake, seats, playerCount }){
             return new SockJS(ws_url);
         });
         stompClient.connect({}, () => {
+            setConnected(true);
             stompClient.subscribe('/topic/game', (message) => {
                 const roomResponse = JSON.parse(message.body);
                 console.log(roomResponse);
                 room.current = roomResponse;
+                if (roomResponse.game !== null) {
+                    setInitialized(true);
+                }
             });
             stompClient.subscribe('/topic/errors', (error) => {
                 console.log(error.body);
             });
-            setConnected(true);
         });
     }, []);
 
@@ -98,21 +102,43 @@ function Room({ stake, seats, playerCount }){
             })
             .then(data => {
                 room.current = data;
-                stompClient.send("/app/init", {}, JSON.stringify(room.current)); 
+                console.log("Existing room data from server:");
+                console.log(data);
+                if (room.current.game === null || room.current.game.gameId === null) {
+                    stompClient.send("/app/init", {}, JSON.stringify(room.current)); 
+                } else if(room.current.game !== null) {
+                    setInitialized(true);
+                }
             })
-            .then(() =>{
-                // if (!room.current.game.players.some(p => p.username === auth.user.username)) {
+            // .then(() =>{
+            //     // if (!room.current.game.players.some(p => p.username === auth.user.username)) {
 
-                // }
-                console.log(hero.current);
-                room.current.game.players = [...room.current.game.players, hero.current]
-                console.log(room.current.game.players)
-                console.log(room.current);
-                stompClient.send('/app/add-players', {}, JSON.stringify(room.current));
-            })
+            //     // }
+            //     console.log(`Room state after initialization:`);
+            //     console.log(room.current);
+            //     room.current.game.players = [...room.current.game.players, hero.current]
+            //     console.log(room.current.game.players)
+            //     stompClient.send('/app/add-players', {}, JSON.stringify(room.current));
+            // })
             .catch(console.log);
         }
     }, [id, timeToGetRoom, connected])
+
+    useEffect(() => {
+        if(initialized) {
+            console.log(`Room state after initialization:`);
+            console.log(room.current);
+            if (room.current.game.players !== null) {
+                if (!room.current.game.players.some(p => p.username === auth.user.username)){
+                    room.current.game.players = [...room.current.game.players, hero.current]
+                }
+            } else if (room.current.game.players === null) {
+                room.current.game.players = [hero.current]
+            }
+            console.log(room.current.game.players)
+            stompClient.send('/app/add-players', {}, JSON.stringify(room.current));
+        }
+    }, [initialized, auth.user.username])
 
     const disconnect = () => {
         if (stompClient !== null) {
