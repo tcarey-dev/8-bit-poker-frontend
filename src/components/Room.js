@@ -38,7 +38,7 @@ function Room({ stake, seats, playerCount }){
         });
         stompClient.connect({}, () => {
             setConnected(true);
-            stompClient.subscribe('/topic/game', (message) => {
+            stompClient.subscribe(`/topic/game/${room.current.roomId}`, (message) => {
                 const roomResponse = JSON.parse(message.body);
                 room.current = roomResponse;
 
@@ -47,7 +47,7 @@ function Room({ stake, seats, playerCount }){
                     handleRoomState();
                 }
             });
-            stompClient.subscribe(`/topic/${room.current.roomId}/errors`, (error) => {
+            stompClient.subscribe(`/topic/errors`, (error) => {
                 console.log(error.body);
             });
         });
@@ -110,7 +110,7 @@ function Room({ stake, seats, playerCount }){
                 console.log("Existing room data from server:");
                 console.log(data);
                 if (room.current.game === null || room.current.game.gameId === null) {
-                    stompClient.send("/app/init", {}, JSON.stringify(room.current)); 
+                    stompClient.send(`/app/init/${room.current.roomId}`, {}, JSON.stringify(room.current)); 
                 } else if(room.current.game !== null) {
                     setInitialized(true);
                 }
@@ -131,7 +131,7 @@ function Room({ stake, seats, playerCount }){
                 room.current.game.players = [hero.current]
             }
             console.log(room.current.game.players)
-            stompClient.send('/app/add-players', {}, JSON.stringify(room.current));
+            stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
         }
     }, [initialized, auth.user.username])
 
@@ -144,7 +144,7 @@ function Room({ stake, seats, playerCount }){
     }
 
     const startGame = () => {
-        stompClient.send("/app/start-game", {}, JSON.stringify(room.current));
+        stompClient.send(`/app/start-game/${room.current.roomId}`, {}, JSON.stringify(room.current));
     }
 
     const handleRoomState = () => {
