@@ -20,7 +20,11 @@ function Room({ stake, seats, playerCount }){
     const [timeToGetRoom, setTimeToGetRoom] = useState(false);
     const [initialized, setInitialized] = useState(false);
 
+    const [heroHoleCards, setHeroHoleCards] = useState(['EMPTY', 'EMPTY']);
+    const [herosAction, setHerosAction] = useState(false);
+
     const hero = useRef(null);
+    const villain = useRef(null);
     const room = useRef({
         "roomId": id,
         "stake": stake,
@@ -36,13 +40,14 @@ function Room({ stake, seats, playerCount }){
             setConnected(true);
             stompClient.subscribe('/topic/game', (message) => {
                 const roomResponse = JSON.parse(message.body);
-                console.log(roomResponse);
                 room.current = roomResponse;
+
                 if (roomResponse.game !== null) {
                     setInitialized(true);
+                    handleRoomState();
                 }
             });
-            stompClient.subscribe('/topic/errors', (error) => {
+            stompClient.subscribe(`/topic/${room.current.roomId}/errors`, (error) => {
                 console.log(error.body);
             });
         });
@@ -110,16 +115,6 @@ function Room({ stake, seats, playerCount }){
                     setInitialized(true);
                 }
             })
-            // .then(() =>{
-            //     // if (!room.current.game.players.some(p => p.username === auth.user.username)) {
-
-            //     // }
-            //     console.log(`Room state after initialization:`);
-            //     console.log(room.current);
-            //     room.current.game.players = [...room.current.game.players, hero.current]
-            //     console.log(room.current.game.players)
-            //     stompClient.send('/app/add-players', {}, JSON.stringify(room.current));
-            // })
             .catch(console.log);
         }
     }, [id, timeToGetRoom, connected])
@@ -150,6 +145,23 @@ function Room({ stake, seats, playerCount }){
 
     const startGame = () => {
         stompClient.send("/app/start-game", {}, JSON.stringify(room.current));
+    }
+
+    const handleRoomState = () => {
+        let game = room.current.game;
+        let players;
+
+        if (game.players.length < 2) { return; } 
+        else {
+            players = game.players;
+            hero.current = players.find(p => p.username === auth.user.username);
+            villain.current = players.find(p => p.username !== auth.user.username);
+        }
+
+        setHeroHoleCards(hero.current.holeCards ? hero.current.holeCards : ['EMPTY', 'EMPTY']);
+        setHerosAction(hero.current.playersAction);
+
+
     }
 
     const handleSubmit = (event) => {
@@ -235,15 +247,17 @@ function Room({ stake, seats, playerCount }){
                 {/* <div id="item17">17</div> */}
                 <div id="item18">
                     <div id="hero-card1">
-                        {/* {<Card value={holeCards[0] ? `${holeCards[0]}` : 'EMPTY'} />} */}
+                        {<Card value={`${heroHoleCards[0]}`} />}
                     </div>
                     <div id="hero-card2">
-                        {/* {<Card value={holeCards[1] ? `${holeCards[1]}` : 'EMPTY'} />} */}
+                    {<Card value={`${heroHoleCards[1]}`} />}                  
                     </div>
                 </div>
                 <div id="item19"></div>
                 <div id="item20">                    
-                <div id="player-option-btns">
+
+                { herosAction ?  
+                    <div id="player-option-btns">
                         <button id="bet"
                             className="nes-btn is-primary"
                             type="button"
@@ -262,7 +276,8 @@ function Room({ stake, seats, playerCount }){
                             onClick={handleSubmit}>
                         Fold
                         </button>
-                    </div></div>
+                    </div> : <div></div>}
+                </div>
                 {/* <div id="item21">21</div> */}
                 <div id="item22"></div>
                 <div id="item23"></div>
