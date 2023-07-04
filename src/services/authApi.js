@@ -1,4 +1,4 @@
-const url = 'http://localhost:8080/security';
+const url = 'http://localhost:8080/api/player';
 
 export async function authenticate(credentials) {
   const init = {
@@ -58,9 +58,9 @@ const makeUserFromJwt = (jwtToken) => {
     const userData = tokenParts[1];
     const decodedUserData = JSON.parse(atob(userData));
     return {
-      appUserId: decodedUserData.app_user_id,
+      playerId: decodedUserData.player_id,
       username: decodedUserData.sub,
-      roles: decodedUserData.authorities.split(',')
+      authorities: decodedUserData.authorities.split(',')
     }
   }
 };

@@ -27,13 +27,13 @@ function LoginForm() {
     evt.preventDefault();
     authenticate(credentials).then(player => {
       auth.onAuthenticated(player);
-      navigate('/');
+      navigate('/lobby');
     })
     .catch(err => setErrors(err));
   };
 
   return <div className="container-fluid">
-    <h1>{auth.player.username}</h1>
+    {/* <h1>{auth.player.username}</h1> */}
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="username" className="form-label">Username</label>

@@ -1,12 +1,12 @@
 import React from "react";
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Landing.css';
 import "nes.css/css/nes.min.css";
 import { Link } from "react-router-dom";
 
 function Landing(){
 
-// const navigate = useNavigate();
+const navigate = useNavigate();
 
 return(<>
         <header>
@@ -17,7 +17,7 @@ return(<>
         </div>
         <section id="buttonContainer">
             <h2 className="optionText">Select Option Below</h2>
-                <button id="logInButton"className="nes-btn is-primary">
+                <button id="logInButton"className="nes-btn is-primary" onClick={() => navigate('/login')}>
                     <i></i>Log In
                 </button>
                 <Link id="signUpButton"className="nes-btn is-primary" type="button" to={"/signup"}>

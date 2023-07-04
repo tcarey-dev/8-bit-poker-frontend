@@ -1,17 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./lobby.css";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
+import AuthContext from '../contexts/AuthContext';
 
 function Lobby(){
     const [rooms, setRooms] = useState([]);
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
     const url = "http://localhost:8080/api/room";
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
-        fetch(url)
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        }}
+
+        fetch(url, init)
         .then(response => {
             if(response.status === 200) {
                 return response.json();
@@ -68,7 +80,7 @@ function Lobby(){
                                     <td>{room.stake}</td>
                                     <td>{room.seats}</td>
                                     <td>
-                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`}>
+                                        <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`} state={{ stake: room.stake, seats: room.seats, playersCount: room.playersCount }}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
