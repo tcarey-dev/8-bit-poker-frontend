@@ -12,7 +12,7 @@ return(<>
             <h1>Welcome to<br/>8-Bit Poker Showdown!</h1>
         </header>
         <div className="landingImage">
-            <img id="kirby" src="https://preview.redd.it/new-kirby-copy-ability-i-made-card-kirby-v0-jobdbb5ucxv81.png?width=584&format=png&auto=webp&s=ab160467e0a28dd29637217d68e523921a42d6a3"></img>
+            <img id="kirby" src="https://preview.redd.it/new-kirby-copy-ability-i-made-card-kirby-v0-jobdbb5ucxv81.png?width=584&format=png&auto=webp&s=ab160467e0a28dd29637217d68e523921a42d6a3" alt="kirby wearing a dealers hat and dealing playing cards"></img>
         </div>
         <section id="buttonContainer">
             <h2 className="optionText">Select Option Below</h2>

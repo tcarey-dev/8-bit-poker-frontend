@@ -1,16 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import "./lobby.css";
 import "nes.css/css/nes.min.css";
-import Errors from "../Errors";
-import AuthContext from '../contexts/AuthContext';
 
 function Lobby(){
     const [rooms, setRooms] = useState([]);
-    const [errors, setErrors] = useState([]);
-    const navigate = useNavigate();
+    const [setErrors] = useState([]);
     const url = "http://localhost:8080/api/room";
-    const auth = useContext(AuthContext);
 
     useEffect(() => {
         const jwtToken = localStorage.getItem('jwt_token');
