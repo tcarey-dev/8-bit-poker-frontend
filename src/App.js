@@ -6,6 +6,7 @@ import NotFound from "./components/NotFound";
 import Lobby from "./components/Lobby";
 import LoginForm from "./components/Login";
 import RoomForm from "./components/RoomForm";
+import SignUpForm from "./components/SignUpForm";
 import Room from "./components/Room";
 import Card from "./components/Card";
 import { refreshToken, signOut } from "./services/authApi";
