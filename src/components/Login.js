@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Errors from "../Errors";
 import AuthContext from "../contexts/AuthContext";
 import { authenticate } from "../services/authApi";
+import "nes.css/css/nes.min.css";
 
 function LoginForm() {
 
@@ -36,19 +37,19 @@ function LoginForm() {
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="username" className="form-label">Username</label>
-        <input type="text" className="form-control" id="username" 
+        <input type="text" className="nes-input" id="username" 
           name="username" value={credentials.username} 
           onChange={handleChange} required />
       </div>
       <div className="mb-3">
         <label htmlFor="password" className="form-label">Password</label>
-        <input type="password" className="form-control" id="password" 
+        <input type="password" className="nes-input" id="password" 
           name="password" value={credentials.password}
           onChange={handleChange} required />
       </div>      
       <div className="mb-3">
-        <button type="submit" className="btn btn-primary">Save</button>
-        <Link to="/" type="button" className="btn btn-secondary">Cancel</Link>
+        <button type="submit" className="nes-btn is-primary">LOGIN</button>
+        <Link to="/" type="button" className="nes-btn">CANCEL</Link>
       </div>
     </form>
     <Errors errors={errors} />
