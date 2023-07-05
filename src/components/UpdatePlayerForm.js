@@ -34,7 +34,7 @@ function UpdatePlayerForm(){
                 'Authorization': `Bearer ${jwtToken}`
             }}
 
-        if(id){
+        
             fetch(`${url}/${auth.user.username}`, init)
             .then(response => {
                 if(response.status === 200){
@@ -47,7 +47,7 @@ function UpdatePlayerForm(){
                 setPlayer(data)
             })
             .catch(err => setErrors(err));
-        }
+        
     }, [auth.user.username]);
 
     const handleChange = (event) => {
@@ -67,7 +67,8 @@ function UpdatePlayerForm(){
         const init = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
             },
             body: JSON.stringify(player)
         };
@@ -78,8 +79,7 @@ function UpdatePlayerForm(){
                     return null;
                 } else if (response.status === 400) {
                     return response.json();
-                }
-                else {
+                } else {
                     return Promise.reject(`Unexpected Status Code: ${response.status}`);
                 }
             })
@@ -99,7 +99,7 @@ function UpdatePlayerForm(){
             <section id="signUpBorder" className="nes-container with-title is-rounded">
                 <h2 id="signUpHeading" className="title">Update Account</h2>
                 <Errors errors={errors}/>
-                <form onSubmit={handlesubmit} id="signUpForm"></form>
+                <form onSubmit={handlesubmit} id="signUpForm">
                     <fieldset className="form-group">
                         <label htmlFor="displayName" className="form-label" >Display Name</label>
                         <input placeholder="50 Character Max."
@@ -146,6 +146,7 @@ function UpdatePlayerForm(){
                         CANCEL
                     </Link>
                 </div>
+                </form>
             </section>
         </div>
         </>

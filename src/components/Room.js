@@ -15,6 +15,7 @@ function Room({ stake, seats, playerCount }){
     const room_url = 'http://localhost:8080/api/room';
     const navigate = useNavigate();
     const { id } = useParams();
+    const auth = useContext(AuthContext);
 
     const hero = useRef(null);
     const villain = useRef(null);

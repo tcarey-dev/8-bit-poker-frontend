@@ -16,11 +16,10 @@ function Lobby(){
     const canEdit = auth.user && auth.hasAuthorities("ADMIN");
     const canDelete = auth.user && auth.hasAuthorities("ADMIN");
     const canCreate = auth.user && auth.hasAuthorities("ADMIN");
-
+    const jwtToken = localStorage.getItem('jwt_token');
 
     useEffect(() => {
-        const jwtToken = localStorage.getItem('jwt_token');
-
+        
         const init = {
         method: 'GET',
         headers: {
@@ -45,8 +44,11 @@ function Lobby(){
         const room = rooms.find(room => room.roomId === roomId);
         if(window.confirm(`Delete room: ${room.roomId}, with ${room.seats} seats and $${room.stake} stakes?`)){
             const init = {
-                method: 'DELETE'
-            };
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+            }};
     
         fetch(`${url}/${roomId}`, init)
         .then(response => {
