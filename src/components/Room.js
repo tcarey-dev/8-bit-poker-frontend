@@ -16,14 +16,6 @@ function Room({ stake, seats, playerCount }){
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const [connected, setConnected] = useState(false);
-    const [timeToGetRoom, setTimeToGetRoom] = useState(false);
-    const [initialized, setInitialized] = useState(false);
-
-    const [heroHoleCards, setHeroHoleCards] = useState(['EMPTY', 'EMPTY']);
-    const [herosAction, setHerosAction] = useState(false);
-    const [gameStarted, setGameStarted] = useState(false);
-
     const hero = useRef(null);
     const villain = useRef(null);
     const room = useRef({
@@ -32,7 +24,16 @@ function Room({ stake, seats, playerCount }){
         "seats": seats,
         "playerCount": playerCount
     });
-    
+
+    const [connected, setConnected] = useState(false);
+    const [timeToGetRoom, setTimeToGetRoom] = useState(false);
+    const [initialized, setInitialized] = useState(false);
+
+    const [heroHoleCards, setHeroHoleCards] = useState(['EMPTY', 'EMPTY']);
+    const [herosAction, setHerosAction] = useState(false);
+    const [gameStarted, setGameStarted] = useState(false);
+    const [bet, setBet] = useState('0');
+
     const connect = useCallback(() => {
         stompClient = Stomp.over(() => {
             return new SockJS(ws_url);
@@ -166,7 +167,6 @@ function Room({ stake, seats, playerCount }){
     }
 
     const handleBet = () => {
-
         stompClient.send(`/app/bet/${room.current.roomId}`, {}, JSON.stringify(room.current));
     }
 
@@ -180,6 +180,12 @@ function Room({ stake, seats, playerCount }){
 
     const handleFold = () => {
         stompClient.send(`/app/fold/${room.current.roomId}`, {}, JSON.stringify(room.current));
+    }
+
+    const handleChange = (event) => {
+        if (event.target.id === 'bet-input-slider') {
+            setBet(event.target.value);
+        }
     }
 
     const handleSubmit = (event) => {
@@ -230,10 +236,10 @@ function Room({ stake, seats, playerCount }){
                     </div> : <div></div>}
                 <div id="item2"></div>
                 <div id="item3">
-                    <div>displayName</div>
+                    <div>{villain.current ? villain.current.displayName : ""}</div>
                     <div className="icon-stack">
                             <div><i className="nes-mario"></i></div>
-                            <div>500<i className="nes-icon coin is-med"></i></div>
+                            <div>{villain.current ? villain.current.accountBalance : 0}<i className="nes-icon coin is-med"></i></div>
                     </div>
                 </div>
                 <div id="item4"></div>
@@ -250,7 +256,14 @@ function Room({ stake, seats, playerCount }){
                     </div>
                 <div id="item9"></div>
                 <div id="item10"></div>
-                <div id="pot">Pot</div>
+                <div id="pot">Pot: {!room.current.game 
+                                        ? <div></div>
+                                        : room.current.game.pot === 0
+                                        ? <div></div> 
+                                        :  
+                                        <>
+                                            <i className="nes-icon coin is-small"></i>&nbsp;{room.current.game.pot}</>}
+                    </div> 
                 <div id="item12">
                     <div id="board-flop1">
                         {<Card value={'EMPTY'}/>}
@@ -272,7 +285,8 @@ function Room({ stake, seats, playerCount }){
                 <div id="item14">14</div> */}
                 <div id="item15"></div>
                 <div id="game-info">
-                    <div>Mario bets 16</div>
+                    {/* custom messages could be displayed here */}
+                    <div></div>
                 </div>
                 {/* <div id="item17">17</div> */}
                 <div id="item18">
@@ -283,79 +297,75 @@ function Room({ stake, seats, playerCount }){
                     {<Card value={`${heroHoleCards[1]}`} />}                  
                     </div>
                 </div>
-                <div id="item19"></div>
+                {/* <div id="item19"></div> */}
                 <div id="item20">                    
-
-                <div id="player-option-btns">
-                                <button id="call"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Call
-                                </button>
-                                <button id="raise"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Raise
-                                </button>
-                                <button id="fold"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Fold
-                                </button>
-                </div> 
-                {/* { !herosAction 
-                        ? <div></div> 
-                        : (room.current.game.lastAction === 'NONE' 
-                            && hero.current.position === 'SMALLBLIND')
-                            || (room.current.game.lastAction === 'BET' 
-                            || room.current.game.lastAction === 'RAISE')
-                            ? <div id="player-option-btns">
-                                <button id="call"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Call
-                                </button>
-                                <button id="raise"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Raise
-                                </button>
-                                <button id="fold"
-                                    className="nes-btn is-primary"
-                                    type="button"
-                                    onClick={handleSubmit}>
-                                Fold
-                                </button>
-                            </div> 
-                            : room.current.game.lastAction === 'CHECK' 
-                                || room.current.game.lastAction === 'CALL' 
-                                ? <div id="player-option-btns">
-                                    <button id="check"
-                                        className="nes-btn is-primary"
-                                        type="button"
-                                        onClick={handleSubmit}>
-                                    Check
-                                    </button>
-                                    <button id="raise"
-                                        className="nes-btn is-primary"
-                                        type="button"
-                                        onClick={handleSubmit}>
-                                    Raise
-                                    </button>
-                                    <button id="fold"
-                                        className="nes-btn is-primary"
-                                        type="button"
-                                        onClick={handleSubmit}>
-                                    Fold
-                                    </button>
-                                </div> 
-                                : <div></div>
-                } */}
+                    <div id="player-option-container">
+                        <div id="player-option-section1">
+                            <div id="player-options-section1-info-subsection"></div>
+                            <div id="player-options-section1-btn-subsection">
+                            { !herosAction 
+                                    ? <div></div> 
+                                    : ((!room.current.game.lastAction
+                                        || room.current.game.lastAction === 'NONE') 
+                                        && hero.current.position === 'SMALLBLIND')
+                                        || (room.current.game.lastAction === 'BET' 
+                                        || room.current.game.lastAction === 'RAISE')
+                                        ? <div id="player-option-btns">
+                                            <button id="call"
+                                                className="nes-btn is-primary"
+                                                type="button"
+                                                onClick={handleSubmit}>
+                                            Call
+                                            </button>
+                                            <button id="raise"
+                                                className="nes-btn is-primary"
+                                                type="button"
+                                                onClick={handleSubmit}>
+                                            Raise
+                                            </button>
+                                            <button id="fold"
+                                                className="nes-btn is-primary"
+                                                type="button"
+                                                onClick={handleSubmit}>
+                                            Fold
+                                            </button>
+                                        </div> 
+                                        : room.current.game.lastAction === 'CHECK' 
+                                            || room.current.game.lastAction === 'CALL' 
+                                            ? <div id="player-option-btns">
+                                                <button id="check"
+                                                    className="nes-btn is-primary"
+                                                    type="button"
+                                                    onClick={handleSubmit}>
+                                                Check
+                                                </button>
+                                                <button id="raise"
+                                                    className="nes-btn is-primary"
+                                                    type="button"
+                                                    onClick={handleSubmit}>
+                                                Raise
+                                                </button>
+                                                <button id="fold"
+                                                    className="nes-btn is-primary"
+                                                    type="button"
+                                                    onClick={handleSubmit}>
+                                                Fold
+                                                </button>
+                                            </div> 
+                                            : <div></div>
+                            }
+                            </div>
+                            </div>
+                        </div>
+                        <div id="player-option-section2">
+                            <input type="range" 
+                                    id="bet-input-slider" 
+                                    className="nes-progress"
+                                    min={room.current ? room.current.stake : '0'} 
+                                    max={hero.current ? hero.current.accountBalance : '500'}
+                                    onChange={handleChange}/>
+                            <p>Bet amount: {bet} </p>
+                        </div>
                 </div>
                 {/* <div id="item21">21</div> */}
                 <div id="item22"></div>
@@ -363,11 +373,11 @@ function Room({ stake, seats, playerCount }){
                 <div id="item24">
                     <div className="icon-stack">
                         <div><i className="nes-ash"></i></div>
-                        <div>500<i className="nes-icon coin is-med"></i></div>
+                        <div>{hero.current ? hero.current.accountBalance : 0}<i className="nes-icon coin is-med"></i></div>
                     </div>
-                    <div>displayName</div>
+                    <div>{hero.current ? hero.current.displayName : ""}</div>
                 </div>
-                <div id="item25"></div>
+                {/* <div id="item25"></div> */}
 
             </section>
             {/* <div>{room.game ? `Game ${room.game.gameId} successfully initialized` : 'Currently no game'}</div> */}
