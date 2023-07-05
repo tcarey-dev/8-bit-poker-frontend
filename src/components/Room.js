@@ -33,6 +33,8 @@ function Room({ stake, seats, playerCount }){
     const [flop, setFlop] = useState(['EMPTY', 'EMPTY', 'EMPTY']);
     const [turn, setTurn] = useState('EMPTY');
     const [river, setRiver] = useState('EMPTY');
+    const [heroIcon, setHeroIcon] = useState('');
+    const [villainIcon, setVillainIcon] = useState('')
 
     const [herosAction, setHerosAction] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
@@ -67,6 +69,9 @@ function Room({ stake, seats, playerCount }){
     //triggered on page load, set Players
     useEffect(() => {
         if (connected) {
+
+            setHeroIcon(chooseIcon);
+            setVillainIcon(chooseIcon);
             const jwtToken = localStorage.getItem('jwt_token');
 
             const init = {
@@ -233,6 +238,28 @@ function Room({ stake, seats, playerCount }){
         }
     }
 
+    const chooseIcon = () => {
+        const random = Math.floor(Math.random() * 7)
+        switch(random) {
+            case 0:
+                return <i class="nes-mario"></i>
+            case 1:
+                return <i class="nes-ash"></i>
+            case 2:
+                return <i class="nes-pokeball"></i>
+            case 3:
+                return <i class="nes-bulbasaur"></i>
+            case 4:
+                return <i class="nes-charmander"></i>
+            case 5:
+                return <i class="nes-squirtle"></i>
+            case 6:
+                return <i class="nes-kirby"></i>
+            default:
+                return <></>
+        }
+    }
+
     return (
         <div id="room">
             <button id="leave"
@@ -255,7 +282,9 @@ function Room({ stake, seats, playerCount }){
                 <div id="item3">
                     <div>{villain.current ? villain.current.displayName : ""}</div>
                     <div className="icon-stack">
-                            <div><i className="nes-mario"></i></div>
+                            <div>
+                                {villainIcon}
+                            </div>
                             <div>{villain.current ? villain.current.accountBalance : 0}<i className="nes-icon coin is-med"></i></div>
                     </div>
                 </div>
@@ -391,7 +420,7 @@ function Room({ stake, seats, playerCount }){
                 <div id="item23"></div>
                 <div id="item24">
                     <div className="icon-stack">
-                        <div><i className="nes-ash"></i></div>
+                        <div>{heroIcon}</div>
                         <div>{hero.current ? hero.current.accountBalance : 0}<i className="nes-icon coin is-med"></i></div>
                     </div>
                     <div>{hero.current ? hero.current.displayName : ""}</div>
