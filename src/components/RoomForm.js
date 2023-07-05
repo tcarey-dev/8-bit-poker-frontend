@@ -10,6 +10,7 @@ const ROOM_DEFAULT = {
 }
 
 function RoomForm(){
+    const jwtToken = localStorage.getItem('jwt_token');
     const [room, setRoom] = useState(ROOM_DEFAULT);
     const [errors, setErrors] = useState([]);
     const url = 'http://localhost:8080/api/room';
@@ -17,8 +18,18 @@ function RoomForm(){
     const { id } = useParams(); 
 
     useEffect(() => {
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }}
+
         if(id) {
-            fetch(`${url}/${id}`)
+            fetch(`${url}/${id}`, init)
             .then(response => {
                 if(response.status === 200){
                     return response.json();
@@ -54,7 +65,8 @@ function RoomForm(){
         const init = {
             method: 'POST',
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
             },
             body: JSON.stringify(room)
         };
@@ -82,14 +94,15 @@ function RoomForm(){
         const init = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
             },
             body: JSON.stringify(room)
         };
 
         fetch(`${url}/${id}`, init)
             .then(response => {
-                if(response.status === 204){
+                if(response.status === 204 || response.status === 200){
                     return null;
                 }else if(response.status === 400){
                     return response.json();
@@ -101,10 +114,10 @@ function RoomForm(){
                 if(!data){
                     navigate('/lobby')
                 }else{
-                    setErrors(data.error);
+                    setErrors(data);
                 }
             })
-            .catch(err => setErrors(err.error));
+            .catch(err => setErrors(err));
     }
 
     return(

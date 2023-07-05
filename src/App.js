@@ -110,7 +110,7 @@ function App() {
           <Route path='/room/create' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
           <Route path='/room/update/:id' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
           <Route path='/room/:id' element={auth.isLoggedIn() ? <Room /> : <Navigate to="/landing" /> } />
-          <Route path='/player/:id' element={auth.isLoggedIn() ? <UpdatePlayerForm /> : <Navigate to="/lobby" /> } />
+          <Route path='/player/:id' element={auth.isLoggedIn() ? <UpdatePlayerForm /> : <Navigate to="/landing" /> } />
           <Route path='/card' element={<Card />}/>
           <Route path='*' element={<NotFound/>}/>
         </Routes>

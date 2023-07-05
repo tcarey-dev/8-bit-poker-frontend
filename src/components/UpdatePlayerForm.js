@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useParams, useHistory } from "react-router-dom";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
+import AuthContext from "../contexts/AuthContext";
 
 const EMPTY_PLAYER = {
     playerId: 0,
     username: '',
     password: '',
+    displayName: '',
+    accountBalance: 0
 };
 
 
@@ -17,10 +20,22 @@ function UpdatePlayerForm(){
     const url = 'http://localhost:8080/api/player'
     const navigate = useNavigate();
     const { id } = useParams();
+    const jwtToken = localStorage.getItem('jwt_token');
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
-        if(id){
-            fetch(`${url}/${id}`)
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }}
+
+        
+            fetch(`${url}/${auth.user.username}`, init)
             .then(response => {
                 if(response.status === 200){
                     return response.json();
@@ -32,8 +47,8 @@ function UpdatePlayerForm(){
                 setPlayer(data)
             })
             .catch(err => setErrors(err));
-        }
-    }, [id]);
+        
+    }, [auth.user.username]);
 
     const handleChange = (event) => {
         const newPlayer = { ...player };
@@ -52,7 +67,8 @@ function UpdatePlayerForm(){
         const init = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
             },
             body: JSON.stringify(player)
         };
@@ -63,8 +79,7 @@ function UpdatePlayerForm(){
                     return null;
                 } else if (response.status === 400) {
                     return response.json();
-                }
-                else {
+                } else {
                     return Promise.reject(`Unexpected Status Code: ${response.status}`);
                 }
             })
@@ -84,7 +99,7 @@ function UpdatePlayerForm(){
             <section id="signUpBorder" className="nes-container with-title is-rounded">
                 <h2 id="signUpHeading" className="title">Update Account</h2>
                 <Errors errors={errors}/>
-                <form onSubmit={handlesubmit} id="signUpForm"></form>
+                <form onSubmit={handlesubmit} id="signUpForm">
                     <fieldset className="form-group">
                         <label htmlFor="displayName" className="form-label" >Display Name</label>
                         <input placeholder="50 Character Max."
@@ -124,13 +139,14 @@ function UpdatePlayerForm(){
                         </select>
                     </fieldset> */}
                     <div>
-                    <button id="signUpSubmit" className="nes-btn is-primary" type="submit">
-                        Update
+                    <button id="updateSubmit" className="nes-btn is-primary" type="submit">
+                        UPDATE
                     </button>
-                    <Link id="signUpCancel" className="nes-btn is-error" type="button" to={"/lobby"}>
-                        Cancel
+                    <Link id="updateCancel" className="nes-btn is-error" type="button" to={"/lobby"}>
+                        CANCEL
                     </Link>
                 </div>
+                </form>
             </section>
         </div>
         </>
