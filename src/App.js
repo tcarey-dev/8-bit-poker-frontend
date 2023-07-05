@@ -105,6 +105,7 @@ function App() {
           <Route path='/' element={auth.isLoggedIn() ? <Lobby /> : <Navigate to="/landing" /> } />
           <Route path='/lobby' element={auth.isLoggedIn() ? <Lobby /> : <Navigate to="/landing" /> } />
           <Route path='/login' element={<LoginForm/>} />
+          <Route path='/signup' element={<SignUpForm/>} />
           <Route path='/room/create' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
           <Route path='/room/update/:id' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
           <Route path='/room/:id' element={auth.isLoggedIn() ? <Room /> : <Navigate to="/landing" /> } />
