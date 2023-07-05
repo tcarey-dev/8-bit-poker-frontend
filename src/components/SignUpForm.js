@@ -10,8 +10,6 @@ const EMPTY_PLAYER = {
     playerId: 0,
     username: '',
     password: '',
-    displayName: '',
-    accountBalance: 0
 };
 
 function SignUpForm() {
@@ -57,7 +55,7 @@ function SignUpForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
         addPlayer();
-        navigate('/loginform');
+        navigate('/login');
         }
 
 
@@ -68,7 +66,7 @@ function SignUpForm() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(credential)
+            body: JSON.stringify(credentials)
         };
         fetch(url, init)
             .then(response => {
@@ -91,7 +89,7 @@ function SignUpForm() {
 
     return(
     <div className="container-fluid">
-        <section id="signUpBorder" className="nes-container with-title is-rounded">
+        <section id="signUpBorder" className="nes-container with-title is-rounded is-dark">
             <h2 id="signUpHeading" className="title">Sign Up</h2>
             <Errors errors={errors}/>
             <form onSubmit={handleSubmit} id="signUpForm">
@@ -103,42 +101,25 @@ function SignUpForm() {
                         id="username" 
                         name="username"
                         value={credentials.username}
-                        onChange={handleChange}/>
+                        onChange={handleChange}
+                        required/>
                 </fieldset>
                 <fieldset className="form-group">
                     <label htmlFor="password" className="form-label">Password</label>
                     <input placeholder="8 Character Min. Must Contain: Digit, Letter, Special Character"
-                        type="text" 
+                        type="password" 
                         className="nes-input"
                         id="password"
                         name="password"
                         value={credentials.password}
-                        onChange={handleChange}/>
-                </fieldset>
-                <fieldset className="form-group">
-                    <label htmlFor="displayName" className="form-label" >Display Name</label>
-                    <input placeholder="50 Character Max."
-                        type="text"
-                        className="nes-input"
-                        id="displayName"
-                        name="displayName"
-                        value={player.displayName}
-                        onChange={handleChange}/>
-                </fieldset>
-                <fieldset className="form-group">
-                    <label htmlFor="accountBalance">Account Balance</label>
-                    <input type="number"
-                        className="nes-input"
-                        id="accountBalance"
-                        name="accountBalance"
-                        value={player.accountBalance}
-                        onChange={handleChange}/>
+                        onChange={handleChange}
+                        required/>
                 </fieldset>
                 <div>
                     <button id="signUpSubmit" className="nes-btn is-primary" type="submit">
                         Submit
                     </button>
-                    <Link id="signUpCancel" className="nes-btn is-error" type="button" to={"/"}>
+                    <Link id="signUpCancel" className="nes-btn is-error" type="button" to={"/landing"}>
                         Cancel
                     </Link>
                 </div>
