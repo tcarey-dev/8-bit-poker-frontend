@@ -37,8 +37,8 @@ function Navbar(){
     }, [auth.user.username]);
 
     return(<>
-    <i id="nesController" class="nes-logo"></i>
-    <i id="nesController2" class="nes-logo"></i>
+    <i id="nesController" className="nes-logo"></i>
+    <i id="nesController2" className="nes-logo"></i>
         <nav>
             {/* <Link to={'/lobby'}>Lobby</Link> */}
             <Link to={'/landing'} onClick={() => signOut()}>Log Out</Link>
