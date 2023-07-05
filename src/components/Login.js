@@ -36,6 +36,7 @@ function LoginForm() {
   return <div className="container-fluid">
     {/* <h1>{auth.player.username}</h1> */}
     <div id="loginFormBorder" className="nes-container is-rounded with-title">
+      <h2 id="logInTitle" className="title">Log In</h2>
       <Errors errors={errors} />
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -62,7 +63,7 @@ function LoginForm() {
               <button id="buttonYes" type="submit" className="nes-btn is-primary">
                 LOGIN
               </button>
-              <Link to="/" id="buttonNo" type="button" className="nes-btn is-error">
+              <Link to="/landing" id="buttonNo" type="button" className="nes-btn is-error">
                 CANCEL
               </Link>
             </div>

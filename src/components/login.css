@@ -1,5 +1,5 @@
 #loginFormBorder{
-    padding-top: 65;
+    padding-top: 10;
     padding-left: 65;
     padding-right: 65;
     margin-top: 90;
@@ -11,6 +11,9 @@
 
 #buttonYes{
     margin-right: 50;
+}
+#logInTitle{
+    padding-bottom: 20;
 }
 
 
