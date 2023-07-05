@@ -9,7 +9,7 @@ import AuthContext from "../contexts/AuthContext";
 var stompClient = null;
 
 function Room({ stake, seats, playerCount }){
-    const auth = useContext(AuthContext);
+    const jwtToken = localStorage.getItem('jwt_token');
     const ws_url = 'http://localhost:8080/ws';
     const player_url = 'http://localhost:8080/api/player';
     const room_url = 'http://localhost:8080/api/room';

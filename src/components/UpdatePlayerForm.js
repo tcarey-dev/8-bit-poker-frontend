@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useParams, useHistory } from "react-router-dom";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
+import AuthContext from "../contexts/AuthContext";
 
 const EMPTY_PLAYER = {
     playerId: 0,
@@ -17,10 +18,22 @@ function UpdatePlayerForm(){
     const url = 'http://localhost:8080/api/player'
     const navigate = useNavigate();
     const { id } = useParams();
+    const jwtToken = localStorage.getItem('jwt_token');
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
+        const jwtToken = localStorage.getItem('jwt_token');
+
+        const init = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }}
+
         if(id){
-            fetch(`${url}/${id}`)
+            fetch(`${url}/${auth.user.username}`, init)
             .then(response => {
                 if(response.status === 200){
                     return response.json();
@@ -33,7 +46,7 @@ function UpdatePlayerForm(){
             })
             .catch(err => setErrors(err));
         }
-    }, [id]);
+    }, [auth.user.username]);
 
     const handleChange = (event) => {
         const newPlayer = { ...player };
@@ -124,11 +137,11 @@ function UpdatePlayerForm(){
                         </select>
                     </fieldset> */}
                     <div>
-                    <button id="signUpSubmit" className="nes-btn is-primary" type="submit">
-                        Update
+                    <button id="updateSubmit" className="nes-btn is-primary" type="submit">
+                        UPDATE
                     </button>
-                    <Link id="signUpCancel" className="nes-btn is-error" type="button" to={"/lobby"}>
-                        Cancel
+                    <Link id="updateCancel" className="nes-btn is-error" type="button" to={"/lobby"}>
+                        CANCEL
                     </Link>
                 </div>
             </section>
