@@ -13,6 +13,11 @@ function Lobby(){
     const url = "http://localhost:8080/api/room";
     const auth = useContext(AuthContext);
 
+    const canEdit = auth.user && auth.hasAuthorities("ADMIN");
+    const canDelete = auth.user && auth.hasAuthorities("ADMIN");
+    const canCreate = auth.user && auth.hasAuthorities("ADMIN");
+
+
     useEffect(() => {
         const jwtToken = localStorage.getItem('jwt_token');
 
@@ -69,9 +74,11 @@ function Lobby(){
                                 <th>Stake</th>
                                 <th>Seats</th>
                                 <th>
+                                    {canCreate && (
                                     <button className="nes-btn is-primary" onClick={() => navigate('/room/create')}>
-                                    CREATE
+                                        CREATE
                                     </button>
+                                    )}
                                 </th>
                             </tr>
                         </thead>
@@ -85,12 +92,16 @@ function Lobby(){
                                         <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`} state={{ stake: room.stake, seats: room.seats, playersCount: room.playersCount }}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
+                                        {canEdit && (
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
                                             UPDATE
                                         </Link>
+                                        )}
+                                        {canDelete && (
                                         <button className="nes-btn is-error" onClick={() => handleDeleteRoom(room.roomId)}>
                                             DELETE
-                                        </button>
+                                        </button> 
+                                        )}
                                     </td>
                                 </tr>
                             ))}
