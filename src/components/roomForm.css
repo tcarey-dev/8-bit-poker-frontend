@@ -1,8 +1,5 @@
-/* *{
-    background-color: #212529;
-} */
-
 #roomFormBorder{
+    padding-top: 10;
     padding-left: 65;
     padding-right: 65;
     padding-bottom: 50;
@@ -13,6 +10,9 @@
     max-width: 1000;
 }
 
+/* #roomFormHeading{
+    padding-bottom: 10;
+} */
 
 
 #buttonYes{

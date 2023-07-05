@@ -8,6 +8,8 @@ const EMPTY_PLAYER = {
     playerId: 0,
     username: '',
     password: '',
+    displayName: '',
+    accountBalance: 0
 };
 
 
