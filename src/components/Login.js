@@ -35,7 +35,7 @@ function LoginForm() {
 
   return <div className="container-fluid">
     {/* <h1>{auth.player.username}</h1> */}
-    <div id="loginFormBorder" className="nes-container is-rounded">
+    <div id="loginFormBorder" className="nes-container is-rounded with-title">
       <Errors errors={errors} />
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
