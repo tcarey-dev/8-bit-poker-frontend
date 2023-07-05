@@ -3,8 +3,7 @@ import { Link, useNavigate, useParams, useHistory } from "react-router-dom";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
 import "./SignUpForm.css";
-import { authenticate } from "../services/authApi";
-import AuthContext from "../contexts/AuthContext";
+
 
 
 const EMPTY_PLAYER = {
@@ -20,8 +19,7 @@ function SignUpForm() {
         username: '',
         password: ''
       });
-    const auth = useContext(AuthContext);
-  
+
     const [player, setPlayer] = useState(EMPTY_PLAYER);
     const [errors, setErrors] = useState([]);
 
@@ -29,7 +27,6 @@ function SignUpForm() {
     const url = 'http://localhost:8080/api/player/create-account'
 
     const navigate = useNavigate();
-    const history = useHistory();
 
     const { id } = useParams();
 
@@ -56,14 +53,6 @@ function SignUpForm() {
         setCredentials(nextCredentials);
       };
 
-    // const handleChange = (event) => {
-    //     const newPlayer = { ...player };
-
-    //     newPlayer[event.target.name] = event.target.value;
-
-    //     setPlayer(newPlayer);
-    // };
-
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -72,40 +61,32 @@ function SignUpForm() {
         }
 
 
-    
 
     const addPlayer = () => {
         const init = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(player)
+            body: JSON.stringify(credential)
         };
         fetch(url, init)
             .then(response => {
-                if(response.status === 201){
-
-                    
-                }else if(response.status === 400){
+                if (response.status === 201 || response.status === 400) {
                     return response.json();
-                }else{
+                } else {
                     return Promise.reject(`Unexpected status code: ${response.status}`);
                 }
             })
             .then(data => {
-                if (data.playerId) {
-                    navigate('/lobby')
-                }else{
-                    setErrors(data)
+                if (data.id) {
+                    navigate('/')
+                } else {
+                    setErrors(data);
                 }
             })
             .catch(err => setErrors(err))
     }
-
-
-
-
 
 
     return(

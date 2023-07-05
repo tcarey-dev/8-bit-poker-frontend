@@ -40,15 +40,23 @@ function LoginForm() {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="username" className="form-label">Username</label>
-              <input type="text" className="nes-input" id="username" 
-                name="username" value={credentials.username} 
-                onChange={handleChange} required />
+              <input type="text"
+                     className="nes-input" 
+                     id="username" 
+                     name="username" 
+                     value={credentials.username} 
+                     onChange={handleChange} 
+                     required />
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Password</label>
-              <input type="password" className="nes-input" id="password" 
-                name="password" value={credentials.password}
-                onChange={handleChange} required />
+              <input type="password" 
+                     className="nes-input" 
+                     id="password" 
+                     name="password" 
+                     value={credentials.password}
+                     onChange={handleChange} 
+                     required />
             </div>      
             <div className="mb-3">
               <button id="buttonYes" type="submit" className="nes-btn is-primary">
