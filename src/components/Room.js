@@ -176,10 +176,12 @@ function Room({ stake, seats, playerCount }){
     }
 
     const handleBet = () => {
+        room.current.game.betAmount = bet;
         stompClient.send(`/app/bet/${room.current.roomId}`, {}, JSON.stringify(room.current));
     }
 
     const handleRaise = () => {
+        room.current.game.betAmount = bet;
         stompClient.send(`/app/raise/${room.current.roomId}`, {}, JSON.stringify(room.current))
     }
 
@@ -300,7 +302,9 @@ function Room({ stake, seats, playerCount }){
                 <div id="item14">14</div> */}
                 <div id="item15"></div>
                 <div id="game-info">
-                    {/* custom messages could be displayed here */}
+                    {room.current.game 
+                    ? <p>{room.current.game.winner} wins!</p> 
+                    : <div></div>}
                     <div></div>
                 </div>
                 {/* <div id="item17">17</div> */}
