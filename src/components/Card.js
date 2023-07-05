@@ -1,23 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Card.css";
 
-const SUITS = ["♠", "♣", "♥", "♦"];
-const VALUES = [
-    "A",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K",
-];
-
 function Card({ value }) {
     const [card, setCard] = useState("");
 
@@ -29,6 +12,10 @@ function Card({ value }) {
 
     const convertCard = (input) => {
         let suitValueArray;
+        if (!input || input === 'EMPTY') {
+            setCard("");
+        }
+
         if (input !== "EMPTY") {
             suitValueArray = input.split("_OF_");
 
@@ -102,7 +89,6 @@ function Card({ value }) {
         } else {
             setCard("");
         }
-
     };
 
     return (

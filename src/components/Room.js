@@ -30,6 +30,10 @@ function Room({ stake, seats, playerCount }){
     const [initialized, setInitialized] = useState(false);
 
     const [heroHoleCards, setHeroHoleCards] = useState(['EMPTY', 'EMPTY']);
+    const [flop, setFlop] = useState(['EMPTY', 'EMPTY', 'EMPTY']);
+    const [turn, setTurn] = useState('EMPTY');
+    const [river, setRiver] = useState('EMPTY');
+
     const [herosAction, setHerosAction] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
     const [bet, setBet] = useState('0');
@@ -43,7 +47,8 @@ function Room({ stake, seats, playerCount }){
             stompClient.subscribe(`/topic/game/${room.current.roomId}`, (message) => {
                 const roomResponse = JSON.parse(message.body);
                 room.current = roomResponse;
-
+                console.log('Latest game state:');
+                console.log(roomResponse);
                 if (roomResponse.game !== null) {
                     setInitialized(true);
                     handleRoomState();
@@ -147,6 +152,7 @@ function Room({ stake, seats, playerCount }){
 
     const startGame = () => {
         stompClient.send(`/app/start-game/${room.current.roomId}`, {}, JSON.stringify(room.current));
+        // setGameStarted(true);
     }
 
     const handleRoomState = () => {
@@ -163,6 +169,9 @@ function Room({ stake, seats, playerCount }){
         setHeroHoleCards(hero.current.holeCards ? hero.current.holeCards : ['EMPTY', 'EMPTY']);
         setHerosAction(hero.current.playersAction);
 
+        setFlop(game.board ? game.board.flop : ['EMPTY', 'EMPTY', 'EMPTY']);
+        setTurn(game.board ? game.board.turn : 'EMPTY');
+        setRiver(game.board ? game.board.river : 'EMPTY'); 
 
     }
 
@@ -220,7 +229,6 @@ function Room({ stake, seats, playerCount }){
             default:
                 break;
         }
-
     }
 
     return (
@@ -273,19 +281,19 @@ function Room({ stake, seats, playerCount }){
                     </div> 
                 <div id="item12">
                     <div id="board-flop1">
-                        {<Card value={'EMPTY'}/>}
+                        {<Card value={`${flop[0]}`} />}
                     </div>
                     <div id="board-flop2">
-                        {<Card value={'EMPTY'}/>}
+                        {<Card value={`${flop[1]}`} />}
                     </div>
                     <div id="board-flop3">
-                        {<Card value={'EMPTY'}/>}
+                        {<Card value={`${flop[2]}`} />}
                     </div>
                     <div id="board-turn">
-                        {<Card value={'EMPTY'}/>}
+                        {<Card value={`${turn}`} />}
                     </div>
                     <div id="board-river">
-                        {<Card value={'EMPTY'}/>}
+                        {<Card value={`${river}`} />}
                     </div>
                 </div>
                 {/* <div id="item13">13</div>
