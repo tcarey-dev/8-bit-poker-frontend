@@ -178,6 +178,10 @@ function Room({ stake, seats, playerCount }){
         stompClient.send(`/app/check/${room.current.roomId}`, {}, JSON.stringify(room.current));
     }
 
+    const handleCall = () => {
+        stompClient.send(`/app/call/${room.current.roomId}`, {}, JSON.stringify(room.current));
+    }
+
     const handleFold = () => {
         stompClient.send(`/app/fold/${room.current.roomId}`, {}, JSON.stringify(room.current));
     }
@@ -197,6 +201,9 @@ function Room({ stake, seats, playerCount }){
                 break;
             case 'start':
                 startGame();
+                break;
+            case 'call':
+                handleCall();
                 break;
             case 'bet':
                 handleBet();
