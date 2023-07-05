@@ -4,6 +4,7 @@ import "./lobby.css";
 import "nes.css/css/nes.min.css";
 import Errors from "../Errors";
 import AuthContext from '../contexts/AuthContext';
+import Navbar from './NavBar';
 
 function Lobby(){
     const [rooms, setRooms] = useState([]);
@@ -57,6 +58,7 @@ function Lobby(){
 
     return(
         <>
+        <Navbar />
         <div id="listBorder" className="nes-container is-centered is-rounded">
             <h2 className="title">Rooms</h2>
                 <div id="listContainer" className="nes-table-responsive">

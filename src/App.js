@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import Landing from "./components/Landing";
 import NotFound from "./components/NotFound";
 import Lobby from "./components/Lobby";
@@ -22,6 +23,32 @@ const WAIT_TIME = 1000 * 60 * 14;
 function App() {
 
   const [user, setUser] = useState(EMPTY_USER);
+  const [restoreLoginAttemptCompleted, setRestoreLoginAttemptCompleted] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      login(token);
+    }
+    setRestoreLoginAttemptCompleted(true);
+  }, []);
+
+  const login = (jwtToken) => {
+    localStorage.setItem('jwt_token', jwtToken);
+
+    const tokenParts = jwtToken.split('.');
+    if (tokenParts.length > 1) {
+      const userData = tokenParts[1];
+      const decodedUserData = JSON.parse(atob(userData));
+      const user = {
+        playerId: decodedUserData.player_id,
+        username: decodedUserData.sub,
+        authorities: decodedUserData.authorities.split(',')
+      }
+      setUser(user);
+      return user;
+    }
+  };
 
   const refreshUser = useCallback(() => {
     refreshToken()
@@ -65,17 +92,22 @@ function App() {
     return component;
   }
 
+  if (!restoreLoginAttemptCompleted) {
+    return null;
+  }
+
   return (
   <>
     <AuthContext.Provider value={auth}>
       <Router>
         <Routes>
-          <Route path='/' element={<Landing/>}/>
+          <Route path='/landing' element={<Landing/>}/>
+          <Route path='/' element={auth.isLoggedIn() ? <Lobby /> : <Navigate to="/landing" /> } />
+          <Route path='/lobby' element={auth.isLoggedIn() ? <Lobby /> : <Navigate to="/landing" /> } />
           <Route path='/login' element={<LoginForm/>} />
           <Route path='/room/create' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
           <Route path='/room/update/:id' element={maybeRedirect(<RoomForm/>, 'ADMIN')}/>
-          <Route path='/lobby' element={auth.isLoggedIn() ? <Lobby /> : <Navigate to="/" /> } />
-          <Route path='/room/:id' element={auth.isLoggedIn() ? <Room /> : <Navigate to="/" /> } />
+          <Route path='/room/:id' element={auth.isLoggedIn() ? <Room /> : <Navigate to="/landing" /> } />
           <Route path='/card' element={<Card />}/>
           <Route path='*' element={<NotFound/>}/>
         </Routes>
