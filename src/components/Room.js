@@ -349,7 +349,7 @@ function Room({ stake, seats, playerCount }){
                         {<Card value={`${flop[2]}`} />}
                     </div>
                     <div id="board-turn">
-                        {<Card value={`${turn}` === 'NaN' ? "" : `${turn}`} />}
+                        {<Card value={`${turn}`} />}
                     </div>
                     <div id="board-river">
                         {<Card value={`${river}`} />}
