@@ -26,6 +26,6 @@
 
 @keyframes blinker2{
     50% {
-      opacity: 0;
+    opacity: 0;
     }
-  }
+}

@@ -1,8 +1,5 @@
-/* *{
-    border: 2px solid rebeccapurple;
-} */
-
 #roomFormBorder{
+    padding-top: 10;
     padding-left: 65;
     padding-right: 65;
     padding-bottom: 50;
@@ -13,6 +10,9 @@
     max-width: 1000;
 }
 
+/* #roomFormHeading{
+    padding-bottom: 10;
+} */
 
 
 #buttonYes{
@@ -29,7 +29,7 @@
 }
 
 #selectFieldSeats{
-    min-height: auto;
+    margin-left: -.5;
     margin-top: 25;
     max-width: 500;
 }
@@ -45,6 +45,7 @@
 
 #inputStake{
     margin-top: 25;
+    margin-right: 20;
 }
 
 #buttons{
