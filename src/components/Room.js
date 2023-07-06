@@ -70,9 +70,7 @@ function Room({ stake, seats, playerCount }){
     //triggered on page load, set Players
     useEffect(() => {
         if (connected) {
-
             setHeroIcon(chooseIcon);
-            setVillainIcon(chooseIcon);
             const jwtToken = localStorage.getItem('jwt_token');
 
             const init = {
@@ -161,26 +159,6 @@ function Room({ stake, seats, playerCount }){
         // setGameStarted(true);
     }
 
-    const handleRoomState = () => {
-        let game = room.current.game;
-        let players;
-
-        if (game.players.length < 2) { return; } 
-        else {
-            players = game.players;
-            hero.current = players.find(p => p.username === auth.user.username);
-            villain.current = players.find(p => p.username !== auth.user.username);
-        }
-
-        setHeroHoleCards(hero.current.holeCards ? hero.current.holeCards : ['EMPTY', 'EMPTY']);
-        setHerosAction(hero.current.playersAction);
-
-        setFlop(game.board ? game.board.flop : ['EMPTY', 'EMPTY', 'EMPTY']);
-        setTurn(game.board ? game.board.turn : 'EMPTY');
-        setRiver(game.board ? game.board.river : 'EMPTY'); 
-
-    }
-
     const handleBet = () => {
         room.current.game.betAmount = bet;
         stompClient.send(`/app/bet/${room.current.roomId}`, {}, JSON.stringify(room.current));
@@ -201,6 +179,27 @@ function Room({ stake, seats, playerCount }){
 
     const handleFold = () => {
         stompClient.send(`/app/fold/${room.current.roomId}`, {}, JSON.stringify(room.current));
+    }
+
+    const handleRoomState = () => {
+        let game = room.current.game;
+        let players;
+
+        if (game.players.length < 2) { return; } 
+        else {
+            players = game.players;
+            hero.current = players.find(p => p.username === auth.user.username);
+            villain.current = players.find(p => p.username !== auth.user.username);
+            setVillainIcon(chooseIcon);
+        }
+
+        setHeroHoleCards(hero.current.holeCards ? hero.current.holeCards : ['EMPTY', 'EMPTY']);
+        setHerosAction(hero.current.playersAction);
+
+        setFlop(game.board ? game.board.flop : ['EMPTY', 'EMPTY', 'EMPTY']);
+        setTurn(game.board ? game.board.turn : 'EMPTY');
+        setRiver(game.board ? game.board.river : 'EMPTY'); 
+
     }
 
     const handleChange = (event) => {
@@ -241,23 +240,37 @@ function Room({ stake, seats, playerCount }){
 
     const chooseIcon = () => {
         const random = Math.floor(Math.random() * 7)
+        let icon = <></>;
         switch(random) {
             case 0:
-                return <i class="nes-mario"></i>
+                icon = <i class="nes-mario"></i>
+                break;
             case 1:
-                return <i class="nes-ash"></i>
+                icon = <i class="nes-ash"></i>
+                break;
             case 2:
-                return <i class="nes-pokeball"></i>
+                icon = <i class="nes-pokeball"></i>
+                break;
             case 3:
-                return <i class="nes-bulbasaur"></i>
+                icon = <i class="nes-bulbasaur"></i>
+                break;
             case 4:
-                return <i class="nes-charmander"></i>
+                icon = <i class="nes-charmander"></i>
+                break;
             case 5:
-                return <i class="nes-squirtle"></i>
+                icon = <i class="nes-squirtle"></i>
+                break;
             case 6:
-                return <i class="nes-kirby"></i>
+                icon = <i class="nes-kirby"></i>
+                break;
             default:
-                return <></>
+                break;
+        }
+
+        if (icon !== <></> && icon === heroIcon) {
+            return chooseIcon;
+        } else {
+            return icon;
         }
     }
 
