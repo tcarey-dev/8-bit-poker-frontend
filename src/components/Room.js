@@ -16,9 +16,6 @@ function Room({ stake, seats, playerCount }){
     const { id } = useParams();
     const auth = useContext(AuthContext);
 
-    const exitGame = useRef(false);
-    const disconnect = useRef(false);
-
     const gameStarted = useRef(false)
     const hero = useRef(null);
     const villain = useRef(null);
@@ -30,11 +27,6 @@ function Room({ stake, seats, playerCount }){
     });
 
     const [connected, setConnected] = useState(false);
-    const [timeToGetRoom, setTimeToGetRoom] = useState(false);
-    const [initialized, setInitialized] = useState(false);
-    // const [initiateExitGame, setInitiateExitGame] = useState(false);
-    // const [exitGame, setExitGame] = useState(false);
-    // const [disconnect, setDisconnect] = useState(false);
 
     const [heroHoleCards, setHeroHoleCards] = useState(['EMPTY', 'EMPTY']);
     const [flop, setFlop] = useState(['EMPTY', 'EMPTY', 'EMPTY']);
@@ -44,7 +36,6 @@ function Room({ stake, seats, playerCount }){
     const [villainIcon, setVillainIcon] = useState('')
 
     const [herosAction, setHerosAction] = useState(false);
-    // const [gameStarted, setGameStarted] = useState(false);
     const [bet, setBet] = useState('0');
 
     const connect = useCallback(() => {
@@ -60,7 +51,7 @@ function Room({ stake, seats, playerCount }){
                 console.log('Latest game state:');
                 console.log(roomResponse);
                 if (roomResponse.game !== null) {
-                    setInitialized(true);
+                    // setInitialized(true);
                     handleRoomState();
                 }
             });
@@ -99,7 +90,6 @@ function Room({ stake, seats, playerCount }){
             .then(data => {
                 hero.current = data;
                 console.log('Successfully retrieved user from server');
-                // setTimeToGetRoom(true);
             })
             .catch(console.log);
         }
@@ -139,21 +129,6 @@ function Room({ stake, seats, playerCount }){
         }
     }, [id, connected])
 
-    // useEffect(() => {
-    //     if(initialized) {
-    //         console.log(`Room state after initialization:`);
-    //         console.log(room.current);
-    //         if (room.current.game.players !== null) {
-    //             if (!room.current.game.players.some(p => p.username === auth.user.username)){
-    //                 room.current.game.players = [...room.current.game.players, hero.current]
-    //             }
-    //         } else if (room.current.game.players === null) {
-    //             room.current.game.players = [hero.current]
-    //         }
-    //         stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
-    //     }
-    // }, [initialized, auth.user.username])
-
     const handleDisconnect = () => {
         if (stompClient !== null) {
             stompClient.disconnect();
@@ -190,15 +165,9 @@ function Room({ stake, seats, playerCount }){
     }
 
     const handleLeave = () => {
-        if (!gameStarted.current) {
+            stompClient.send(`/app/leave-game/${room.current.roomId}/${auth.user.username}`, {}, JSON.stringify(room.current));
             handleDisconnect();
-        } else if (gameStarted.current && hero.current.playersAction) {
-            stompClient.send(`/app/leave-game/${room.current.roomId}/${hero.current.username}`, {}, JSON.stringify(room.current));
-            disconnect.current = true;
-        } else if (gameStarted.current && !hero.current.playersAction) {
-            exitGame.current = true;
-        }
-    }
+    } 
 
     const handleAddPlayers = () => {
         console.log(`Room state when handle add players is triggered:`);
@@ -219,17 +188,6 @@ function Room({ stake, seats, playerCount }){
         let players;
 
         handleAddPlayers();
-
-        if (disconnect.current) {
-            handleDisconnect();
-            return;
-        }
-
-        if (exitGame.current) {
-            stompClient.send(`/app/leave-game/${room.current.roomId}/${hero.current.username}`, {}, JSON.stringify(room.current));
-            handleDisconnect();
-            return;
-        }
 
         if (game.players.length < 2) { 
             gameStarted.current = false;
