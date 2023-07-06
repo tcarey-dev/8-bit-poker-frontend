@@ -1,16 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import "./lobby.css";
 import "nes.css/css/nes.min.css";
+import Errors from "../Errors";
+import AuthContext from '../contexts/AuthContext';
+import Navbar from './NavBar';
 
 function Lobby(){
     const [rooms, setRooms] = useState([]);
-    const [setErrors] = useState([]);
+    const [errors, setErrors] = useState([]);
+    const navigate = useNavigate();
     const url = "http://localhost:8080/api/room";
+    const auth = useContext(AuthContext);
+
+    const canEdit = auth.user && auth.hasAuthorities("ADMIN");
+    const canDelete = auth.user && auth.hasAuthorities("ADMIN");
+    const canCreate = auth.user && auth.hasAuthorities("ADMIN");
+    const jwtToken = localStorage.getItem('jwt_token');
 
     useEffect(() => {
-        const jwtToken = localStorage.getItem('jwt_token');
-
+        
         const init = {
         method: 'GET',
         headers: {
@@ -35,8 +44,11 @@ function Lobby(){
         const room = rooms.find(room => room.roomId === roomId);
         if(window.confirm(`Delete room: ${room.roomId}, with ${room.seats} seats and $${room.stake} stakes?`)){
             const init = {
-                method: 'DELETE'
-            };
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+            }};
     
         fetch(`${url}/${roomId}`, init)
         .then(response => {
@@ -53,6 +65,7 @@ function Lobby(){
 
     return(
         <>
+        <Navbar />
         <div id="listBorder" className="nes-container is-centered is-rounded">
             <h2 className="title">Rooms</h2>
                 <div id="listContainer" className="nes-table-responsive">
@@ -62,7 +75,13 @@ function Lobby(){
                                 <th>Id</th>
                                 <th>Stake</th>
                                 <th>Seats</th>
-                                <th>&nbsp;</th>
+                                <th>
+                                    {canCreate && (
+                                    <button className="nes-btn is-primary" onClick={() => navigate('/room/create')}>
+                                        CREATE
+                                    </button>
+                                    )}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,12 +94,16 @@ function Lobby(){
                                         <Link className="nes-btn is-success" type="button" to={`/room/${room.roomId}`} state={{ stake: room.stake, seats: room.seats, playersCount: room.playersCount }}>
                                             JOIN <i className="nes-icon coin is-small"/>
                                         </Link>
+                                        {canEdit && (
                                         <Link className="nes-btn is-warning" to={`/room/update/${room.roomId}`}>
                                             UPDATE
                                         </Link>
+                                        )}
+                                        {canDelete && (
                                         <button className="nes-btn is-error" onClick={() => handleDeleteRoom(room.roomId)}>
                                             DELETE
-                                        </button>
+                                        </button> 
+                                        )}
                                     </td>
                                 </tr>
                             ))}
