@@ -54,7 +54,7 @@ function Room({ stake, seats, playerCount }){
                     // setInitialized(true);
                     handleRoomState();
                 }
-            });
+            },  { 'username': JSON.stringify(auth.user.username) });
             stompClient.subscribe(`/topic/errors`, (error) => {
                 console.log(error.body);
             });

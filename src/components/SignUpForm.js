@@ -78,7 +78,7 @@ function SignUpForm() {
             })
             .then(data => {
                 if (data.id) {
-                    navigate('/')
+                    navigate('/login')
                 } else {
                     setErrors(data);
                 }
