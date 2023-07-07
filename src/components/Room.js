@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useState, useMemo, useContext, useRef } from "react";
 import { Stomp } from '@stomp/stompjs';
 import SockJS from "sockjs-client";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
 import './Room.css';
 import Card from "./Card";
 import AuthContext from "../contexts/AuthContext";
 
 var stompClient = null;
 
-function Room({ stake, seats, playerCount }){
+function Room(){
     const ws_url = 'http://localhost:8080/ws';
     const navigate = useNavigate();
     const { id } = useParams();
     const auth = useContext(AuthContext);
+    const location = useLocation();
+    const { stake, seats, playersCount } = location.state;
 
     const gameStarted = useRef(false)
     const hero = useRef(null);
@@ -21,7 +23,7 @@ function Room({ stake, seats, playerCount }){
         "roomId": id,
         "stake": stake,
         "seats": seats,
-        "playerCount": playerCount
+        "playerCount": playersCount
     });
 
     // const [connected, setConnected] = useState(false);
@@ -31,7 +33,8 @@ function Room({ stake, seats, playerCount }){
     const [turn, setTurn] = useState('EMPTY');
     const [river, setRiver] = useState('EMPTY');
     const [heroIcon, setHeroIcon] = useState('');
-    const [villainIcon, setVillainIcon] = useState('')
+    const villainIcon = useRef('');
+    // const [villainIcon, setVillainIcon] = useState('')
 
     const [herosAction, setHerosAction] = useState(false);
     const [bet, setBet] = useState('0');
@@ -113,15 +116,17 @@ function Room({ stake, seats, playerCount }){
             gameStarted.current = false;
             // room.current.game.pot = 0;
             villain.current = null;
-            setVillainIcon("")
+            villainIcon.current = null;
+            // setVillainIcon("")
             return; 
         } 
         else {
             players = game.players;
             hero.current = players.find(p => p.username === auth.user.username);
             villain.current = players.find(p => p.username !== auth.user.username);
-            if(!villainIcon) {
-                setVillainIcon(chooseIcon);
+            if(!villainIcon.current) {
+                // setVillainIcon(chooseIcon);
+                villainIcon.current = chooseIcon();
             }
         }
 
@@ -231,7 +236,7 @@ function Room({ stake, seats, playerCount }){
                     <div>{villain.current ? villain.current.displayName : ""}</div>
                     <div className="icon-stack">
                             <div>
-                                {villainIcon}
+                                {villainIcon.current}
                             </div>
                             <div>{villain.current ? villain.current.accountBalance : 0}<i className="nes-icon coin is-med"></i></div>
                     </div>
@@ -357,13 +362,13 @@ function Room({ stake, seats, playerCount }){
                             <input type="range" 
                                     id="bet-input-slider" 
                                     className="nes-progress"
-                                    min={room.current ? room.current.stake : '0'} 
+                                    defaultValue={stake}
+                                    min={stake} 
                                     max={hero.current ? hero.current.accountBalance : '500'}
                                     onChange={handleChange}/>
                             <p>Bet amount: {bet} </p>
                         </div>
                 </div>
-                {/* <div id="item21">21</div> */}
                 <div id="item22"></div>
                 <div id="item23"></div>
                 <div id="item24">
