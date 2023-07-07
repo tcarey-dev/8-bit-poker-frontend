@@ -43,18 +43,21 @@ function Room({ stake, seats, playerCount }){
             return new SockJS(ws_url);
         });
         stompClient.connect({}, () => {
-            setConnected(true);
+            // setConnected(true);
             console.log('successfully connected');
+
             stompClient.subscribe(`/topic/game/${room.current.roomId}`, (message) => {
                 const roomResponse = JSON.parse(message.body);
                 room.current = roomResponse;
+
                 console.log('Latest game state:');
                 console.log(roomResponse);
+
                 if (roomResponse.game !== null) {
-                    // setInitialized(true);
-                    handleRoomState();
+                    // handleRoomState();
                 }
-            },  { 'username': JSON.stringify(auth.user.username) });
+            }, { 'username' : JSON.stringify(auth.user.username) });
+
             stompClient.subscribe(`/topic/errors`, (error) => {
                 console.log(error.body);
             });
@@ -66,68 +69,68 @@ function Room({ stake, seats, playerCount }){
     }, [connect])
 
     //triggered on page load, set Players
-    useEffect(() => {
-        if (connected) {
-            setHeroIcon(chooseIcon);
-            const jwtToken = localStorage.getItem('jwt_token');
+    // useEffect(() => {
+    //     if (connected) {
+    //         setHeroIcon(chooseIcon);
+    //         const jwtToken = localStorage.getItem('jwt_token');
 
-            const init = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${jwtToken}`
-                }}
+    //         const init = {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Accept': 'application/json',
+    //                 'Authorization': `Bearer ${jwtToken}`
+    //             }}
             
-            fetch(`${player_url}/${auth.user.username}`, init)
-            .then(response => {
-                if(response.status === 200) {
-                    return response.json();
-                }else{
-                    return Promise.reject(`Unexpected Status Code: ${response.status}`);
-                }
-            })
-            .then(data => {
-                hero.current = data;
-                console.log('Successfully retrieved user from server');
-            })
-            .catch(console.log);
-        }
-    }, [auth.user.username, connected]);
+    //         fetch(`${player_url}/${auth.user.username}`, init)
+    //         .then(response => {
+    //             if(response.status === 200) {
+    //                 return response.json();
+    //             }else{
+    //                 return Promise.reject(`Unexpected Status Code: ${response.status}`);
+    //             }
+    //         })
+    //         .then(data => {
+    //             hero.current = data;
+    //             console.log('Successfully retrieved user from server');
+    //         })
+    //         .catch(console.log);
+    //     }
+    // }, [auth.user.username, connected]);
 
-    useEffect(() => { 
-        if (connected) {
-            const jwtToken = localStorage.getItem('jwt_token');
-            const init = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
-            }}
+    // useEffect(() => { 
+    //     if (connected) {
+    //         const jwtToken = localStorage.getItem('jwt_token');
+    //         const init = {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json',
+    //             'Authorization': `Bearer ${jwtToken}`
+    //         }}
     
-            fetch(`${room_url}/${id}`, init)
-            .then(response => {
-                if(response.status === 200) {
-                    return response.json();
-                }else{
-                    return Promise.reject(`Unexpected Status Code: ${response.status}`);
-                }
-            })
-            .then(data => {
-                room.current = data;
-                console.log("Room data from server recieved upon joining room:");
-                console.log(data);
-                if (room.current.game === null || room.current.game.gameId === null) {
-                    stompClient.send(`/app/init/${room.current.roomId}`, {}, JSON.stringify(room.current)); 
-                } else if(room.current.game !== null) {
-                    handleAddPlayers();
-                    handleRoomState();
-                }
-            })
-            .catch(console.log);
-        }
-    }, [id, connected])
+    //         fetch(`${room_url}/${id}`, init)
+    //         .then(response => {
+    //             if(response.status === 200) {
+    //                 return response.json();
+    //             }else{
+    //                 return Promise.reject(`Unexpected Status Code: ${response.status}`);
+    //             }
+    //         })
+    //         .then(data => {
+    //             room.current = data;
+    //             console.log("Room data from server recieved upon joining room:");
+    //             console.log(data);
+    //             if (room.current.game === null || room.current.game.gameId === null) {
+    //                 stompClient.send(`/app/init/${room.current.roomId}`, {}, JSON.stringify(room.current)); 
+    //             } else if(room.current.game !== null) {
+    //                 handleAddPlayers();
+    //                 handleRoomState();
+    //             }
+    //         })
+    //         .catch(console.log);
+    //     }
+    // }, [id, connected])
 
     const handleDisconnect = () => {
         if (stompClient !== null) {
@@ -169,25 +172,25 @@ function Room({ stake, seats, playerCount }){
             handleDisconnect();
     } 
 
-    const handleAddPlayers = () => {
-        console.log(`Room state when handle add players is triggered:`);
-        console.log(room.current);
-        if (room.current.game.players === null) {
-            room.current.game.players = [hero.current]
-            stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
-        } else if (room.current.game.players.length === 1 
-                    && (!room.current.game.players.some(
-                        p => p.username === auth.user.username))) {
-            room.current.game.players = [...room.current.game.players, hero.current];
-            stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
-        }
-    }
+    // const handleAddPlayers = () => {
+    //     console.log(`Room state when handle add players is triggered:`);
+    //     console.log(room.current);
+    //     if (room.current.game.players === null) {
+    //         room.current.game.players = [hero.current]
+    //         stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
+    //     } else if (room.current.game.players.length === 1 
+    //                 && (!room.current.game.players.some(
+    //                     p => p.username === auth.user.username))) {
+    //         room.current.game.players = [...room.current.game.players, hero.current];
+    //         stompClient.send(`/app/add-players/${room.current.roomId}`, {}, JSON.stringify(room.current));
+    //     }
+    // }
 
     const handleRoomState = () => {
         let game = room.current.game;
         let players;
 
-        handleAddPlayers();
+        // handleAddPlayers();
 
         if (game.players.length < 2) { 
             gameStarted.current = false;
